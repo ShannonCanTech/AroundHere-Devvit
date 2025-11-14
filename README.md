@@ -640,3 +640,4 @@ src/
 ### Cursor Integration
 
 This template comes with a pre-configured Cursor environment. To get started, [download Cursor](https://www.cursor.com/downloads) and enable the `devvit-mcp` when prompted.
+# AroundHere-Devvit
