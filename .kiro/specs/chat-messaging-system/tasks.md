@@ -1,0 +1,286 @@
+# Implementation Plan
+
+- [x] 1. Update shared types for multi-chat support
+  - Create new type definitions in `src/shared/types/chat.ts` for Message, Chat, and ChatListItem
+  - Add API response types in `src/shared/types/api.ts` for all chat endpoints
+  - Update existing ChatMessage type to new Message type with edit tracking
+  - _Requirements: 1.1, 1.2, 1.3, 4.1, 4.2_
+
+- [x] 2. Implement Redis data schema and storage utilities
+  - [x] 2.1 Create Redis helper functions for chat metadata operations
+    - Write functions to create, read, update, and delete chat metadata in Redis hash
+    - Implement participant management in Redis (add/remove from participants array)
+    - _Requirements: 1.2, 1.5, 4.1, 4.5, 6.2, 6.3, 6.4_
+  - [x] 2.2 Create Redis helper functions for message storage
+    - Write functions to store messages in Redis sorted sets with timestamp scores
+    - Implement message retrieval with pagination support
+    - Add functions for message editing and deletion
+    - _Requirements: 1.2, 1.3, 3.2, 3.3, 4.1, 4.3, 4.4_
+  - [x] 2.3 Create Redis helper functions for user chat index
+    - Write functions to add/remove chat IDs from user's chat set
+    - Implement function to retrieve all chat IDs for a user
+    - _Requirements: 2.2, 4.4, 6.4, 7.1_
+
+- [x] 3. Implement data retention module
+  - [x] 3.1 Create retention policy functions
+    - Write function to check if message should be deleted based on 90-day policy
+    - Write function to check if chat should be deleted based on 180-day inactivity
+    - _Requirements: 5.1, 5.2, 5.5_
+  - [x] 3.2 Implement lazy deletion for messages
+    - Create function to clean old messages from a chat during retrieval
+    - Integrate cleanup into message fetching operations
+    - _Requirements: 5.1, 5.4_
+  - [x] 3.3 Implement lazy deletion for inactive chats
+    - Create function to clean inactive chats during chat list retrieval
+    - Remove chat metadata and all associated messages
+    - Update user chat index to remove deleted chats
+    - _Requirements: 5.2, 5.3, 5.4_
+
+- [x] 4. Implement chat management business logic
+  - [x] 4.1 Create chat creation function
+    - Generate unique chat ID
+    - Store chat metadata in Redis with creator as initial participant
+    - Add chat ID to user's chat index
+    - Return created chat object
+    - _Requirements: 6.1, 6.2, 6.3, 6.4_
+  - [x] 4.2 Create function to retrieve user's chat list
+    - Fetch all chat IDs from user's chat index
+    - Retrieve metadata for each chat
+    - Fetch last message for each chat
+    - Calculate unread count (placeholder for now)
+    - Sort by lastMessageAt timestamp
+    - Run inactive chat cleanup
+    - _Requirements: 2.2, 7.1, 7.2, 7.3, 7.4_
+  - [x] 4.3 Create function to retrieve single chat with access validation
+    - Verify user is a participant in the chat
+    - Return chat metadata or null if unauthorized
+    - _Requirements: 8.7_
+  - [x] 4.4 Create function to delete chat
+    - Verify user is the creator or has permission
+    - Delete all messages from Redis
+    - Delete chat metadata
+    - Remove from user's chat index
+    - _Requirements: 5.3_
+
+- [x] 5. Implement message management business logic
+  - [x] 5.1 Create function to send new message
+    - Validate user is participant in chat
+    - Generate unique message ID
+    - Create message object with timestamp
+    - Store in Redis sorted set
+    - Update chat's lastMessageAt timestamp
+    - Return message object
+    - _Requirements: 1.2, 1.3, 8.7_
+  - [x] 5.2 Create function to retrieve messages with pagination
+    - Validate user is participant in chat
+    - Run message cleanup for old messages
+    - Fetch messages from Redis sorted set with limit and before timestamp
+    - Parse JSON message objects
+    - Return messages array and hasMore flag
+    - _Requirements: 1.3, 4.2, 4.3, 4.4_
+  - [x] 5.3 Create function to edit message
+    - Validate user is participant and message author
+    - Update message content in Redis
+    - Set edited flag and editedAt timestamp
+    - Return updated message object or null if unauthorized
+    - _Requirements: 3.2, 3.4, 3.5_
+  - [x] 5.4 Create function to delete message
+    - Validate user is participant and message author
+    - Remove message from Redis sorted set
+    - Return success boolean
+    - _Requirements: 3.3, 3.5_
+
+- [x] 6. Create API endpoints for chat operations
+  - [x] 6.1 Implement POST /api/chats/create endpoint
+    - Get authenticated user ID from Devvit context
+    - Call chat creation function
+    - Return chat ID and creation timestamp
+    - Handle errors with appropriate status codes
+    - _Requirements: 6.1, 6.2, 6.3, 8.1_
+  - [x] 6.2 Implement GET /api/chats endpoint
+    - Get authenticated user ID from Devvit context
+    - Call function to retrieve user's chat list
+    - Return array of chat list items
+    - Handle errors with appropriate status codes
+    - _Requirements: 2.2, 7.1, 7.2, 7.3, 7.4, 8.2_
+  - [x] 6.3 Implement GET /api/chats/:chatId endpoint
+    - Get authenticated user ID and chat ID from request
+    - Call function to retrieve chat with access validation
+    - Return chat metadata or 404/403 error
+    - _Requirements: 8.7_
+  - [x] 6.4 Implement DELETE /api/chats/:chatId endpoint
+    - Get authenticated user ID and chat ID from request
+    - Call function to delete chat
+    - Return success status
+    - Handle authorization errors
+    - _Requirements: 5.3_
+
+- [x] 7. Create API endpoints for message operations
+  - [x] 7.1 Implement POST /api/chats/:chatId/messages endpoint
+    - Get authenticated user ID, username, and chat ID from request
+    - Extract message content from request body
+    - Validate content is not empty
+    - Call function to send message
+    - Broadcast message via Devvit realtime with chat context
+    - Return message object
+    - Handle errors with appropriate status codes
+    - _Requirements: 1.2, 1.3, 1.4, 8.3, 8.7_
+  - [x] 7.2 Implement GET /api/chats/:chatId/messages endpoint
+    - Get authenticated user ID and chat ID from request
+    - Extract pagination parameters (limit, before) from query string
+    - Call function to retrieve messages with pagination
+    - Return messages array and hasMore flag
+    - Handle errors with appropriate status codes
+    - _Requirements: 1.3, 4.2, 4.3, 4.4, 8.4, 8.7_
+  - [x] 7.3 Implement PUT /api/chats/:chatId/messages/:messageId endpoint
+    - Get authenticated user ID, chat ID, and message ID from request
+    - Extract new content from request body
+    - Validate content is not empty
+    - Call function to edit message
+    - Return updated message object or error
+    - Handle authorization errors
+    - _Requirements: 3.2, 3.4, 3.5, 8.5, 8.7_
+  - [x] 7.4 Implement DELETE /api/chats/:chatId/messages/:messageId endpoint
+    - Get authenticated user ID, chat ID, and message ID from request
+    - Call function to delete message
+    - Return success status
+    - Handle authorization errors
+    - _Requirements: 3.3, 3.5, 8.6, 8.7_
+
+- [x] 8. Update MessagesPanel component to use real data
+  - [x] 8.1 Remove placeholder mockChatSessions data
+    - Delete mockChatSessions constant from component
+    - _Requirements: 9.2_
+  - [x] 8.2 Add state management for chat list
+    - Add useState for chats array and loading state
+    - Add useEffect to fetch chats from /api/chats on mount
+    - Update chats state with fetched data
+    - _Requirements: 2.1, 2.2, 7.1, 9.2, 9.4_
+  - [x] 8.3 Implement empty state display
+    - Show empty state message when chats array is empty
+    - Display "No messages yet" with appropriate icon
+    - _Requirements: 2.5, 9.4_
+  - [x] 8.4 Update chat list rendering
+    - Map over real chats data instead of mock data
+    - Display actual lastMessage, timestamp, and unread count
+    - Sort chats by lastMessageAt before rendering
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 9.5_
+  - [x] 8.5 Wire up "New Message" button
+    - Call POST /api/chats/create when button is clicked
+    - Navigate to newly created chat
+    - Update chats list with new chat
+    - _Requirements: 6.1, 6.2, 6.3_
+
+- [x] 9. Update App component for multi-chat support
+  - [x] 9.1 Add state for current chat ID
+    - Add useState for currentChatId (string | null)
+    - Update handleChatSelect to set currentChatId
+    - _Requirements: 1.3, 2.1_
+  - [x] 9.2 Update message fetching to be chat-specific
+    - Modify useEffect to fetch messages for currentChatId
+    - Call GET /api/chats/:chatId/messages instead of /api/messages
+    - Only fetch when currentChatId is not null
+    - Clear messages when currentChatId changes
+    - _Requirements: 1.3, 4.2, 9.5_
+  - [x] 9.3 Update message sending to include chat context
+    - Modify handleSendMessage to send to current chat
+    - Call POST /api/chats/:chatId/messages with currentChatId
+    - Show error if no chat is selected
+    - _Requirements: 1.2, 1.4_
+  - [x] 9.4 Update realtime connection for chat-specific messages
+    - Modify realtime onMessage handler to filter by currentChatId
+    - Only add messages that belong to current chat
+    - Update channel subscription to include chat context
+    - _Requirements: 1.4_
+  - [x] 9.5 Remove placeholder data from chat screen
+    - Ensure messages are only from API, not hardcoded
+    - Display empty state when no messages exist
+    - _Requirements: 9.1, 9.3_
+
+- [x] 10. Add message edit and delete functionality to chat screen
+  - [x] 10.1 Add message action menu UI
+    - Add three-dot menu button to each message from current user
+    - Show edit and delete options in dropdown menu
+    - Hide menu for messages from other users
+    - _Requirements: 3.1, 3.5_
+  - [x] 10.2 Implement message editing
+    - Add edit mode state for message being edited
+    - Show inline text input when edit is selected
+    - Call PUT /api/chats/:chatId/messages/:messageId on save
+    - Update message in local state
+    - Show "edited" indicator on edited messages
+    - _Requirements: 3.2, 3.4_
+  - [x] 10.3 Implement message deletion
+    - Show confirmation dialog when delete is selected
+    - Call DELETE /api/chats/:chatId/messages/:messageId on confirm
+    - Remove message from local state
+    - _Requirements: 3.3_
+
+- [x] 11. Update MobileNav to navigate to chat list
+  - [x] 11.1 Update chat button click handler
+    - Modify onNavigate for chat button to open MessagesPanel
+    - Set isMessagesPanelOpen to true when chat is clicked
+    - _Requirements: 2.1_
+  - [x] 11.2 Add active state indicator
+    - Show active state when currentScreen is 'chat'
+    - Update styling to highlight active chat button
+    - _Requirements: 2.1_
+
+- [x] 12. Implement message pagination in chat screen
+  - [x] 12.1 Add pagination state management
+    - Add state for hasMore flag
+    - Add state for loading more messages
+    - Track oldest message timestamp for pagination
+    - _Requirements: 4.3, 4.4_
+  - [x] 12.2 Implement "Load More" functionality
+    - Add "Load More" button at top of message list
+    - Call GET /api/chats/:chatId/messages with before parameter
+    - Append older messages to existing messages
+    - Hide button when hasMore is false
+    - _Requirements: 4.3, 4.4_
+  - [x] 12.3 Add scroll-to-load behavior
+    - Detect when user scrolls near top of message list
+    - Automatically load more messages
+    - Maintain scroll position after loading
+    - _Requirements: 4.4_
+
+- [x] 13. Add error handling and loading states
+  - [x] 13.1 Add loading indicators
+    - Show spinner while fetching chats in MessagesPanel
+    - Show spinner while fetching messages in chat screen
+    - Show loading state on message send button
+    - _Requirements: 1.4_
+  - [x] 13.2 Add error toast notifications
+    - Display toast for failed API calls
+    - Show specific error messages from server
+    - Add retry option for transient failures
+    - _Requirements: 8.7_
+  - [x] 13.3 Handle edge cases
+    - Handle chat not found (404) by redirecting to chat list
+    - Handle unauthorized access (403) with error message
+    - Handle network failures with offline indicator
+    - Prevent actions during loading states
+    - _Requirements: 8.7_
+
+- [x] 14. Update realtime broadcasting for multi-chat
+  - [x] 14.1 Modify server realtime broadcast
+    - Include chatId in realtime message payload
+    - Update channel name to be chat-specific or include chat context
+    - _Requirements: 1.4_
+  - [x] 14.2 Update client realtime listener
+    - Filter incoming messages by chatId
+    - Only update UI for messages in current chat
+    - Update chat list when message arrives in other chats
+    - _Requirements: 1.4, 7.4_
+
+- [x] 15. Clean up deprecated code
+  - [x] 15.1 Remove old message endpoints
+    - Remove GET /api/messages endpoint from server
+    - Remove POST /api/send-message endpoint (replace with new one)
+    - Update any remaining references to old endpoints
+    - _Requirements: 9.5_
+  - [x] 15.2 Remove unused types and components
+    - Remove old ChatMessage type if fully replaced
+    - Clean up any unused imports
+    - Remove commented-out code
+    - _Requirements: 9.5_

@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "devvit-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@devvit/mcp"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "devvit_search"
+      ]
+    },
+    "@21st-dev/magic": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@21st-dev/magic@latest",
+        "API_KEY=\"d95ffc882c86e8754314b275ff4ab24198b9a338167b280c61764905328c4b72\""
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "21st_magic_component_builder",
+        "21st_magic_component_builder"
+      ]
+    }
+  }
+}

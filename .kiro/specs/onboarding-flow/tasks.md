@@ -1,0 +1,316 @@
+# Implementation Plan
+
+- [x] 1. Update project dependencies and configuration for Devvit 0.12.2
+  - Update package.json to use @devvit/web version 0.12.2 or higher
+  - Run npm install to update dependencies
+  - Verify build still works with new version
+  - _Requirements: 10.1_
+
+- [x] 2. Configure multiple entry points in devvit.json
+  - Update devvit.json to use new entrypoints configuration format
+  - Define "welcome" entry point with welcome.html, height: "regular", inline: true
+  - Define "terms" entry point with terms.html, height: "regular", inline: true
+  - Define "home" entry point with index.html (existing main app)
+  - Remove deprecated splash parameter if present
+  - _Requirements: 5.1, 5.2, 5.3, 5.4, 10.3, 10.4_
+
+- [x] 3. Update Vite configuration for multiple HTML entry points
+  - Import fileURLToPath, dirname, and resolve from Node.js modules
+  - Add rollupOptions.input with welcome, terms, and home entry points
+  - Map each entry point to its corresponding HTML file path
+  - Verify build outputs all three HTML files correctly
+  - _Requirements: 5.1, 10.5_
+
+- [x] 4. Create shared types for consent management
+  - Create new file src/shared/types/consent.ts
+  - Define ConsentStatus type with accepted, timestamp, termsVersion fields
+  - Define CheckConsentResponse type with hasConsent and optional consent fields
+  - Define AcceptConsentRequest type with optional termsVersion field
+  - Define AcceptConsentResponse type with success and consent fields
+  - _Requirements: 4.2, 6.2_
+
+- [x] 5. Implement Redis consent storage functions
+  - [x] 5.1 Create consent Redis module
+    - Create new file src/server/core/redis/consent.ts
+    - Import Redis client types
+    - Export consent storage functions
+    - _Requirements: 6.1, 6.2_
+  - [x] 5.2 Implement setConsent function
+    - Accept redis client, userId, and ConsentStatus parameters
+    - Store consent as Redis hash at key user:{userId}:consent
+    - Convert boolean and number fields to strings for Redis storage
+    - Handle Redis errors gracefully
+    - _Requirements: 4.1, 6.1, 6.2_
+  - [x] 5.3 Implement getConsent function
+    - Accept redis client and userId parameters
+    - Retrieve consent hash from Redis
+    - Parse string fields back to correct types
+    - Return null if consent doesn't exist
+    - _Requirements: 4.3, 6.1, 6.2_
+  - [x] 5.4 Implement hasConsent function
+    - Accept redis client and userId parameters
+    - Check if consent key exists in Redis
+    - Return boolean indicating existence
+    - _Requirements: 4.3, 6.1_
+
+- [x] 6. Implement consent management business logic
+  - [x] 6.1 Create consent management module
+    - Create new file src/server/core/consent.ts
+    - Import Redis consent functions and types
+    - Export consent management functions
+    - _Requirements: 6.5_
+  - [x] 6.2 Implement checkConsent function
+    - Accept userId parameter
+    - Get Redis client from context
+    - Call getConsent from Redis module
+    - Return ConsentStatus or null
+    - _Requirements: 4.3, 6.3_
+  - [x] 6.3 Implement recordConsent function
+    - Accept userId and termsVersion parameters
+    - Get Redis client from context
+    - Create ConsentStatus object with current timestamp
+    - Call setConsent from Redis module
+    - Return created ConsentStatus
+    - _Requirements: 4.1, 4.2, 6.4_
+  - [x] 6.4 Implement getCurrentTermsVersion function
+    - Return current terms version string (e.g., "1.0")
+    - Make it easy to update version in future
+    - _Requirements: 4.2_
+
+- [x] 7. Create consent API endpoints
+  - [x] 7.1 Implement GET /api/consent/check endpoint
+    - Get authenticated user ID from Devvit context
+    - Return 401 if no user context
+    - Call checkConsent function with user ID
+    - Return hasConsent boolean and optional consent object
+    - Handle errors with appropriate status codes
+    - _Requirements: 4.3, 6.3, 6.5_
+  - [x] 7.2 Implement POST /api/consent/accept endpoint
+    - Get authenticated user ID from Devvit context
+    - Return 401 if no user context
+    - Extract termsVersion from request body (optional)
+    - Use current version if not provided
+    - Call recordConsent function
+    - Return success status and consent object
+    - Handle errors with appropriate status codes
+    - _Requirements: 4.1, 4.2, 6.4, 6.5_
+
+- [x] 8. Create welcome screen HTML entry point
+  - Create new file src/client/welcome.html
+  - Set up basic HTML structure with meta tags
+  - Add viewport meta tag for mobile responsiveness
+  - Set title to "Welcome"
+  - Add root div element
+  - Add script tag to load welcome.tsx module
+  - _Requirements: 1.1, 5.2_
+
+- [x] 9. Create welcome screen TypeScript entry point
+  - Create new file src/client/welcome.tsx
+  - Import React, ReactDOM, and WelcomeScreen component
+  - Import index.css for styling
+  - Set up React root and render WelcomeScreen
+  - Use StrictMode for development checks
+  - _Requirements: 1.1, 5.2_
+
+- [x] 10. Implement WelcomeScreen component
+  - [x] 10.1 Create WelcomeScreen component file
+    - Create new file src/client/screens/WelcomeScreen.tsx
+    - Set up component with loading state
+    - Export as default
+    - _Requirements: 1.1_
+  - [x] 10.2 Design welcome screen UI
+    - Add app logo/icon (large, centered)
+    - Add app name and tagline
+    - Add 3-4 feature highlights with icons (real-time messaging, multiple chats, edit/delete, persistent history)
+    - Style with engaging background gradient or pattern
+    - Ensure mobile-first responsive design
+    - _Requirements: 1.2, 1.3, 1.5_
+  - [x] 10.3 Implement "Get Started" button
+    - Add prominent call-to-action button
+    - Style button to stand out
+    - Add loading state during navigation
+    - _Requirements: 1.4_
+  - [x] 10.4 Implement navigation to terms screen
+    - Handle button click event
+    - Set loading state
+    - Navigate to terms.html using window.location
+    - _Requirements: 2.1, 8.1_
+
+- [x] 11. Create terms screen HTML entry point
+  - Create new file src/client/terms.html
+  - Set up basic HTML structure with meta tags
+  - Add viewport meta tag for mobile responsiveness
+  - Set title to "Terms & Conditions"
+  - Add root div element
+  - Add script tag to load terms.tsx module
+  - _Requirements: 2.1, 5.3_
+
+- [x] 12. Create terms screen TypeScript entry point
+  - Create new file src/client/terms.tsx
+  - Import React, ReactDOM, and TermsScreen component
+  - Import index.css for styling
+  - Set up React root and render TermsScreen
+  - Use StrictMode for development checks
+  - _Requirements: 2.1, 5.3_
+
+- [x] 13. Create PolicyOverlay component
+  - [x] 13.1 Create PolicyOverlay component file
+    - Create new file src/client/components/PolicyOverlay.tsx
+    - Define PolicyOverlayProps type with isOpen, onClose, title, content
+    - Export component
+    - _Requirements: 3.1, 3.2_
+  - [x] 13.2 Implement overlay UI structure
+    - Render as React portal to document.body
+    - Add semi-transparent backdrop
+    - Add white content card (centered, max-width)
+    - Add close button (X icon, top-right)
+    - Add title at top
+    - Add scrollable content area
+    - _Requirements: 3.1, 3.2, 3.3, 3.5_
+  - [x] 13.3 Implement overlay interactions
+    - Close overlay when backdrop is clicked
+    - Close overlay when close button is clicked
+    - Close overlay when Escape key is pressed
+    - Prevent body scroll when overlay is open
+    - _Requirements: 3.3, 3.4_
+
+- [x] 14. Implement TermsScreen component
+  - [x] 14.1 Create TermsScreen component file
+    - Create new file src/client/screens/TermsScreen.tsx
+    - Set up component with state for overlays, loading, and errors
+    - Import PolicyOverlay component
+    - Export as default
+    - _Requirements: 2.1_
+  - [x] 14.2 Design terms screen UI
+    - Add header "Before You Continue"
+    - Add explanatory text about accepting terms
+    - Add hyperlinked text for "Privacy Policy"
+    - Add hyperlinked text for "Terms & Conditions"
+    - Add prominent "I Agree" button
+    - Add optional "Back" button
+    - Style for mobile-first responsive design
+    - _Requirements: 2.2, 2.3, 2.4, 2.5_
+  - [x] 14.3 Implement Privacy Policy overlay
+    - Handle Privacy Policy link click
+    - Show PolicyOverlay with privacy policy content
+    - Pass privacy policy text as content
+    - Handle overlay close
+    - _Requirements: 3.1, 3.3, 3.4_
+  - [x] 14.4 Implement Terms & Conditions overlay
+    - Handle Terms & Conditions link click
+    - Show PolicyOverlay with terms content
+    - Pass terms text as content
+    - Handle overlay close
+    - _Requirements: 3.2, 3.3, 3.4_
+  - [x] 14.5 Implement consent acceptance
+    - Handle "I Agree" button click
+    - Set loading state
+    - Call POST /api/consent/accept endpoint
+    - Handle success: use requestExpandedMode to navigate to home entry point
+    - Handle errors: display error message
+    - Clear loading state
+    - _Requirements: 4.1, 4.2, 8.2, 8.3_
+
+- [x] 15. Create Privacy Policy content
+  - Create privacy policy text with sections: Introduction, Data Collection, Data Usage, Data Storage, Data Sharing, User Rights, Contact Information
+  - Include details about user ID, message content, timestamps
+  - Explain 90-day message retention and 180-day chat retention
+  - Clarify no third-party sharing
+  - Store content in TermsScreen component or separate file
+  - _Requirements: 2.2, 3.1_
+
+- [x] 16. Create Terms & Conditions content
+  - Create terms text with sections: Acceptance of Terms, Description of Service, User Responsibilities, Prohibited Activities, Content Ownership, Limitation of Liability, Changes to Terms, Termination, Governing Law
+  - Include appropriate content guidelines
+  - Reference Reddit rules compliance
+  - Store content in TermsScreen component or separate file
+  - _Requirements: 2.2, 3.2_
+
+- [x] 17. Update post creation to use welcome entry point
+  - Locate post creation endpoint in src/server/index.ts
+  - Update submitCustomPost call to include entry: 'welcome'
+  - Maintain backward compatibility with existing posts
+  - Test post creation with new entry point
+  - _Requirements: 7.1, 7.2, 7.3, 7.4_
+
+- [x] 18. Implement consent check on app load
+  - [x] 18.1 Add consent check to welcome screen
+    - On component mount, call GET /api/consent/check
+    - If consent exists, navigate to home entry point
+    - If no consent, stay on welcome screen
+    - Handle errors gracefully
+    - _Requirements: 4.3, 4.4_
+  - [x] 18.2 Add consent check to terms screen
+    - On component mount, call GET /api/consent/check
+    - If consent exists, navigate to home entry point
+    - If no consent, stay on terms screen
+    - Handle errors gracefully
+    - _Requirements: 4.3, 4.4_
+
+- [x] 19. Add error handling and loading states
+  - [x] 19.1 Add loading indicators
+    - Show spinner during consent check
+    - Show spinner during consent acceptance
+    - Show spinner during navigation transitions
+    - _Requirements: 8.3_
+  - [x] 19.2 Add error handling
+    - Display user-friendly error messages for network failures
+    - Provide retry button for transient errors
+    - Log errors for debugging
+    - Handle requestExpandedMode failures gracefully
+    - _Requirements: 8.4_
+  - [x] 19.3 Add validation
+    - Prevent navigation without consent acceptance
+    - Disable buttons during loading states
+    - Show inline error messages
+    - _Requirements: 8.5_
+
+- [x] 20. Test onboarding flow end-to-end
+  - [ ] 20.1 Test new user flow
+    - Create new post with welcome entry point
+    - Verify welcome screen displays in inline mode
+    - Click "Get Started" and verify navigation to terms screen
+    - Click Privacy Policy link and verify overlay appears
+    - Close overlay and verify return to terms screen
+    - Click Terms & Conditions link and verify overlay appears
+    - Close overlay and verify return to terms screen
+    - Click "I Agree" and verify navigation to home screen in expanded mode
+    - _Requirements: 1.1, 1.4, 2.1, 3.1, 3.2, 3.3, 3.4, 4.1, 8.2_
+  - [ ] 20.2 Test returning user flow
+    - View post as user who has already accepted terms
+    - Verify direct navigation to home screen (bypassing onboarding)
+    - _Requirements: 4.3, 4.4_
+  - [ ] 20.3 Test consent persistence
+    - Accept terms as user
+    - Close app and reopen
+    - Verify user goes directly to home screen
+    - Test with different browser/device
+    - _Requirements: 4.2, 4.3_
+  - [ ] 20.4 Test error scenarios
+    - Test network failure during consent check
+    - Test network failure during consent acceptance
+    - Test invalid terms version
+    - Verify error messages display correctly
+    - _Requirements: 8.4_
+  - [ ] 20.5 Test mobile responsiveness
+    - Test on mobile device or emulator
+    - Verify inline mode fits in post unit
+    - Test touch interactions
+    - Verify overlay displays correctly on small screens
+    - _Requirements: 1.5_
+
+- [ ] 21. Verify existing app functionality
+  - Test that home screen loads correctly after onboarding
+  - Verify all existing chat features work normally
+  - Verify navigation between screens works
+  - Verify chat API endpoints remain unchanged
+  - Verify existing chat data in Redis is accessible
+  - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+
+- [ ] 22. Update documentation
+  - Update README with onboarding flow information
+  - Document consent tracking approach
+  - Document entry points configuration
+  - Add screenshots of welcome and terms screens
+  - Document how to update terms version
+  - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
