@@ -22,6 +22,12 @@
       "autoApprove": [
         "21st_magic_component_builder",
         "21st_magic_component_builder"
+      ],
+      "disabledTools": [
+        "21st_magic_component_builder",
+        "logo_search",
+        "21st_magic_component_inspiration",
+        "21st_magic_component_refiner"
       ]
     }
   }
