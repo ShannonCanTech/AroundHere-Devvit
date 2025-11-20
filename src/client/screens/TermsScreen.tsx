@@ -23,7 +23,7 @@ const TermsScreen: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error('Error checking consent:', error);
+        // Silently fail
       } finally {
         setIsCheckingConsent(false);
       }
@@ -51,12 +51,10 @@ const TermsScreen: React.FC = () => {
       try {
         await requestExpandedMode(event.nativeEvent, 'home');
       } catch (expandError) {
-        console.error('Failed to enter expanded mode, falling back to direct navigation:', expandError);
         // Fallback to direct navigation if requestExpandedMode fails
         window.location.href = '/index.html';
       }
     } catch (err) {
-      console.error('Error accepting terms:', err);
       setError('Failed to accept terms. Please try again.');
       setIsAccepting(false);
     }

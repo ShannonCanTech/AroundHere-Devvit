@@ -18,7 +18,6 @@ export async function setConsent(
       termsVersion: consent.termsVersion,
     });
   } catch (error) {
-    console.error('Error storing consent in Redis:', error);
     throw new Error('Failed to store consent');
   }
 }
@@ -45,7 +44,6 @@ export async function getConsent(
       termsVersion: data.termsVersion,
     };
   } catch (error) {
-    console.error('Error retrieving consent from Redis:', error);
     throw new Error('Failed to retrieve consent');
   }
 }
@@ -63,7 +61,6 @@ export async function hasConsent(
     const exists = await redis.exists(key);
     return exists;
   } catch (error) {
-    console.error('Error checking consent existence in Redis:', error);
     throw new Error('Failed to check consent');
   }
 }

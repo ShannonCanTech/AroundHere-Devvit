@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "../lib/utils";
 import type { ChatListItem } from "../../shared/types/chat";
+import { ProfileIcon } from "./ProfileIcon";
 
 type MessagesPanelProps = {
   isOpen: boolean;
@@ -34,7 +35,6 @@ export const MessagesPanel: React.FC<MessagesPanelProps> = ({ isOpen, onClose, o
       );
       setChats(sortedChats);
     } catch (error) {
-      console.error('Error fetching chats:', error);
       onError?.('Failed to load chats', fetchChats);
     } finally {
       setLoading(false);
@@ -60,7 +60,6 @@ export const MessagesPanel: React.FC<MessagesPanelProps> = ({ isOpen, onClose, o
       onChatSelect?.(data.chatId);
       onClose();
     } catch (error) {
-      console.error('Error creating chat:', error);
       onError?.('Failed to create chat', handleCreateChat);
     } finally {
       setCreating(false);
@@ -178,11 +177,11 @@ export const MessagesPanel: React.FC<MessagesPanelProps> = ({ isOpen, onClose, o
                   >
                     <div className="flex gap-3">
                       {/* Avatar */}
-                      <div className="relative flex-shrink-0">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#d93900] to-[#ff6b35] flex items-center justify-center text-2xl">
-                          💬
-                        </div>
-                      </div>
+                      <ProfileIcon 
+                        url={chat.lastMessage?.avatarUrl}
+                        username={chat.lastMessage?.username || 'User'}
+                        size="large"
+                      />
 
                       {/* Chat Info */}
                       <div className="flex-1 min-w-0">

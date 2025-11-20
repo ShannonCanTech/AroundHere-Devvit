@@ -1,0 +1,338 @@
+/**
+ * Snoovatar Animations
+ * 
+ * CSS animations for different avatar poses
+ * Import this file in your main CSS or component
+ */
+
+/* Wave Animation */
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.animate-wave {
+  animation: wave 1s ease-in-out;
+  transform-origin: center bottom;
+}
+
+/* Jump Animation */
+@keyframes jump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-jump {
+  animation: jump 0.6s ease-in-out;
+}
+
+/* Celebrate Animation */
+@keyframes celebrate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.animate-celebrate {
+  animation: celebrate 0.8s ease-in-out;
+}
+
+/* Sad Animation */
+@keyframes sad {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.animate-sad {
+  animation: sad 2s ease-in-out infinite;
+}
+
+/* Idle Breathing Animation */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Sparkle Animation */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Glow Pulse Animation */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    filter: blur(8px);
+  }
+  50% {
+    opacity: 0.6;
+    filter: blur(12px);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Bounce Animation (for accessories) */
+@keyframes bounce-accessory {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-accessory {
+  animation: bounce-accessory 1s ease-in-out infinite;
+}
+
+/* Rotate Animation (for accessories like crowns) */
+@keyframes rotate-accessory {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotate-accessory {
+  animation: rotate-accessory 3s linear infinite;
+}
+
+/* Shake Animation (for emphasis) */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Float Animation (for background effects) */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Fade In Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in;
+}
+
+/* Scale In Animation */
+@keyframes scale-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+/* Wiggle Animation (for attention) */
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+/* Hover Effects */
+.snoovatar-hover {
+  transition: transform 0.2s ease-in-out;
+}
+
+.snoovatar-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Loading Pulse */
+@keyframes loading-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-loading-pulse {
+  animation: loading-pulse 1.5s ease-in-out infinite;
+}
+
+/* Utility Classes */
+.snoovatar-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+.snoovatar-smooth {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Accessory Entrance Animations */
+@keyframes accessory-pop-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-accessory-pop-in {
+  animation: accessory-pop-in 0.4s ease-out;
+}
+
+/* Victory Animation (combination) */
+@keyframes victory {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-10deg) translateY(-10px);
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg) translateY(-20px);
+  }
+  75% {
+    transform: scale(1.1) rotate(10deg) translateY(-10px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg) translateY(0);
+  }
+}
+
+.animate-victory {
+  animation: victory 1s ease-in-out;
+}
+
+/* Defeat Animation */
+@keyframes defeat {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  50% {
+    transform: scale(0.9) rotate(0deg);
+  }
+  75% {
+    transform: scale(0.95) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-defeat {
+  animation: defeat 1s ease-in-out;
+}
+
+/* Attention Seeker (for notifications) */
+@keyframes attention {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: scale(1.1);
+  }
+  20%, 40%, 60%, 80% {
+    transform: scale(0.9);
+  }
+}
+
+.animate-attention {
+  animation: attention 1s ease-in-out;
+}

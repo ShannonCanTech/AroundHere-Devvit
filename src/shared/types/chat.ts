@@ -6,6 +6,7 @@ export type Message = {
   timestamp: number;
   edited: boolean;
   editedAt: number | null;
+  avatarUrl?: string;
 };
 
 export type Chat = {
@@ -22,6 +23,7 @@ export type ChatListItem = Chat & {
     text: string;
     username: string;
     timestamp: number;
+    avatarUrl?: string;
   };
   unreadCount: number;
 };

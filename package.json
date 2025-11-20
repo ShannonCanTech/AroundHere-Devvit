@@ -22,7 +22,8 @@
     "launch": "npm run build && npm run deploy && devvit publish",
     "prettier": "prettier-package-json --write ./package.json && prettier --write .",
     "sync-docs": "node scripts/sync-devvit-docs.js",
-    "type-check": "tsc --build"
+    "type-check": "tsc --build",
+    "validate-docs": "node scripts/validate-devvit-docs.js && node scripts/test-navigation.js"
   },
   "dependencies": {
     "@devvit/web": "^0.12.2",

@@ -10,7 +10,9 @@ import {
   EditMessageResponse,
   DeleteMessageResponse,
   ErrorResponse,
+  UserAvatarResponse,
 } from '../shared/types/api';
+import { getAvatarUrl } from './core/avatar';
 import {
   redis,
   reddit,
@@ -61,7 +63,6 @@ router.get<{ postId: string }, InitResponse | { status: string; message: string 
     const { postId } = context;
 
     if (!postId) {
-      console.error('API Init Error: postId not found in devvit context');
       res.status(400).json({
         status: 'error',
         message: 'postId is required but missing from context',
@@ -82,7 +83,6 @@ router.get<{ postId: string }, InitResponse | { status: string; message: string 
         username: username ?? 'anonymous',
       });
     } catch (error) {
-      console.error(`API Init Error for post ${postId}:`, error);
       let errorMessage = 'Unknown error during initialization';
       if (error instanceof Error) {
         errorMessage = `Initialization failed: ${error.message}`;
@@ -137,8 +137,129 @@ router.get('/api/username', async (_req, res): Promise<void> => {
     const username = await reddit.getCurrentUsername();
     res.json({ username: username ?? 'Anonymous' });
   } catch (error) {
-    console.error('Error fetching username:', error);
     res.status(500).json({ username: 'Anonymous' });
+  }
+});
+
+/**
+ * GET /api/user/avatar
+ * Gets a user's avatar URL (snoovatar or default)
+ * Query params:
+ *   - username: Optional. If not provided, returns current user's avatar
+ */
+router.get<unknown, UserAvatarResponse | ErrorResponse>('/api/user/avatar', async (req, res): Promise<void> => {
+  try {
+    // Get username from query param or use current user
+    const requestedUsername = req.query.username as string | undefined;
+    const username = requestedUsername || await reddit.getCurrentUsername();
+    
+    if (!username) {
+      res.status(401).json({
+        error: 'Unauthorized',
+        message: 'User authentication required',
+      });
+      return;
+    }
+
+    // Use the avatar utility to get the URL (with caching)
+    const avatarUrl = await getAvatarUrl(username);
+
+    res.json({
+      username,
+      avatarUrl,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'Failed to fetch user avatar',
+    });
+  }
+});
+
+/**
+ * GET /api/avatar-test
+ * Returns test slides for different avatar URL patterns
+ */
+router.get('/api/avatar-test', async (_req, res): Promise<void> => {
+  try {
+    const username = await reddit.getCurrentUsername() || 'anonymous';
+    
+    // Helper function for Reddit default avatars
+    const getRedditDefaultAvatar = (user: string, num: number): string => {
+      return `https://www.redditstatic.com/avatars/defaults/v2/avatar_default_${num}.png`;
+    };
+
+    // Generate hash for consistent default avatar
+    const hash = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const defaultNum = hash % 8;
+
+    const slides = [];
+
+    // Slide 1: getSnoovatarUrl() result
+    try {
+      const user = await reddit.getUserByUsername(username);
+      const snoovatarUrl = await user?.getSnoovatarUrl();
+      
+      slides.push({
+        title: 'Slide 1: getSnoovatarUrl()',
+        description: 'This is the URL returned by the Reddit API method user.getSnoovatarUrl()',
+        url: snoovatarUrl || '/default-snoo.png',
+        source: snoovatarUrl ? 'Reddit API (i.redd.it)' : 'Fallback (no custom snoovatar)',
+      });
+    } catch (error) {
+      slides.push({
+        title: 'Slide 1: getSnoovatarUrl() - Error',
+        description: 'Failed to fetch from Reddit API',
+        url: '/default-snoo.png',
+        source: 'Error fallback',
+      });
+    }
+
+    // Slide 2: Redis cached URL
+    const cachedUrl = await redis.get(`avatar:${username}`);
+    slides.push({
+      title: 'Slide 2: Redis Cached URL',
+      description: 'This is the URL stored in Redis cache (if any)',
+      url: cachedUrl || '/default-snoo.png',
+      source: cachedUrl ? 'Redis Cache' : 'No cache (using fallback)',
+    });
+
+    // Slide 3-10: All 8 Reddit default avatars
+    for (let i = 0; i < 8; i++) {
+      slides.push({
+        title: `Slide ${3 + i}: Reddit Default Avatar ${i}`,
+        description: `Reddit's built-in default avatar #${i} (www.redditstatic.com)`,
+        url: getRedditDefaultAvatar(username, i),
+        source: `Reddit Default #${i}`,
+      });
+    }
+
+    // Slide 11: Your custom default
+    slides.push({
+      title: 'Slide 11: Custom Default Avatar',
+      description: 'Your uploaded default-snoo.png from the app assets',
+      url: '/default-snoo.png',
+      source: 'App Asset',
+    });
+
+    // Slide 12: User's computed default
+    slides.push({
+      title: 'Slide 12: Your Computed Default',
+      description: `Based on username hash, you get default avatar #${defaultNum}`,
+      url: getRedditDefaultAvatar(username, defaultNum),
+      source: `Computed Default #${defaultNum}`,
+    });
+
+    res.json({
+      username,
+      slides,
+    });
+  } catch (error) {
+    console.error('Error generating avatar test slides:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'Failed to generate avatar test slides',
+    });
   }
 });
 
@@ -170,7 +291,6 @@ router.get<unknown, CheckConsentResponse | ErrorResponse>('/api/consent/check', 
       consent: consent || undefined,
     });
   } catch (error) {
-    console.error('Error checking consent:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to check consent',
@@ -218,7 +338,6 @@ router.post<unknown, AcceptConsentResponse | ErrorResponse, AcceptConsentRequest
         consent,
       });
     } catch (error) {
-      console.error('Error recording consent:', error);
       res.status(500).json({
         error: 'Internal Server Error',
         message: 'Failed to record consent',
@@ -255,7 +374,6 @@ router.post<unknown, CreateChatResponse | ErrorResponse>('/api/chats/create', as
       createdAt: chat.createdAt,
     });
   } catch (error) {
-    console.error('Error creating chat:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to create chat',
@@ -288,7 +406,6 @@ router.get<unknown, GetChatsResponse | ErrorResponse>('/api/chats', async (_req,
       chats,
     });
   } catch (error) {
-    console.error('Error fetching chats:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to fetch chats',
@@ -330,7 +447,6 @@ router.get<{ chatId: string }, Chat | ErrorResponse>('/api/chats/:chatId', async
     // Return chat metadata
     res.json(chat);
   } catch (error) {
-    console.error('Error fetching chat:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to fetch chat',
@@ -374,7 +490,6 @@ router.delete<{ chatId: string }, { success: boolean } | ErrorResponse>('/api/ch
       success: true,
     });
   } catch (error) {
-    console.error('Error deleting chat:', error);
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to delete chat',
@@ -435,8 +550,6 @@ router.post<{ chatId: string }, SendMessageResponse | ErrorResponse, { content: 
         message,
       });
     } catch (error) {
-      console.error('Error sending message:', error);
-      
       // Handle specific error cases
       if (error instanceof Error && error.message === 'User is not a participant in this chat') {
         res.status(403).json({
@@ -489,8 +602,6 @@ router.get<{ chatId: string }, GetMessagesResponse | ErrorResponse>(
         hasMore: result.hasMore,
       });
     } catch (error) {
-      console.error('Error fetching messages:', error);
-
       // Handle specific error cases
       if (error instanceof Error && error.message === 'User is not a participant in this chat') {
         res.status(403).json({
@@ -558,7 +669,6 @@ router.put<{ chatId: string; messageId: string }, EditMessageResponse | ErrorRes
         message: updatedMessage,
       });
     } catch (error) {
-      console.error('Error editing message:', error);
       res.status(500).json({
         error: 'Internal Server Error',
         message: 'Failed to edit message',
@@ -605,7 +715,6 @@ router.delete<{ chatId: string; messageId: string }, DeleteMessageResponse | Err
         success: true,
       });
     } catch (error) {
-      console.error('Error deleting message:', error);
       res.status(500).json({
         error: 'Internal Server Error',
         message: 'Failed to delete message',
@@ -623,7 +732,6 @@ router.post('/internal/on-app-install', async (_req, res): Promise<void> => {
       message: `Post created in subreddit ${context.subredditName} with id ${post.id}`,
     });
   } catch (error) {
-    console.error(`Error creating post: ${error}`);
     res.status(400).json({
       status: 'error',
       message: 'Failed to create post',
@@ -639,7 +747,6 @@ router.post('/internal/menu/post-create', async (_req, res): Promise<void> => {
       navigateTo: `https://reddit.com/r/${context.subredditName}/comments/${post.id}`,
     });
   } catch (error) {
-    console.error(`Error creating post: ${error}`);
     res.status(400).json({
       status: 'error',
       message: 'Failed to create post',
@@ -654,5 +761,4 @@ app.use(router);
 const port = getServerPort();
 
 const server = createServer(app);
-server.on('error', (err) => console.error(`server error; ${err.stack}`));
 server.listen(port);

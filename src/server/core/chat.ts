@@ -8,6 +8,7 @@ import { createChat as createChatInRedis, getChat, deleteChat as deleteChatMetad
 import { addChatToUser, getUserChatIds, removeChatFromUser } from './redis/userChatIndex';
 import { getLastMessage, deleteAllMessages } from './redis/message';
 import { cleanInactiveChats } from './retention';
+import { getAvatarUrl } from './avatar';
 
 /**
  * Generate a unique chat ID
@@ -61,7 +62,18 @@ export async function getUserChats(userId: string): Promise<ChatListItem[]> {
     // Fetch last message for each chat
     const lastMessage = await getLastMessage(chatId);
 
-    // Build chat list item
+    // Build chat list item with avatar URL
+    let avatarUrl: string | undefined;
+    if (lastMessage) {
+      try {
+        avatarUrl = await getAvatarUrl(lastMessage.username);
+      } catch (error) {
+        // If avatar fetch fails, use chat-session-specific fallback
+        const { getChatSessionFallbackAvatar } = await import('./chatAvatarFallback');
+        avatarUrl = await getChatSessionFallbackAvatar(lastMessage.userId, chatId);
+      }
+    }
+
     const chatListItem: ChatListItem = {
       ...chat,
       lastMessage: lastMessage
@@ -69,6 +81,7 @@ export async function getUserChats(userId: string): Promise<ChatListItem[]> {
             text: lastMessage.content,
             username: lastMessage.username,
             timestamp: lastMessage.timestamp,
+            avatarUrl,
           }
         : undefined,
       unreadCount: 0, // Placeholder for now

@@ -16,6 +16,7 @@ import { PlacesScreen } from './screens/PlacesScreen';
 import { SavedScreen } from './screens/SavedScreen';
 import { HistoryScreen } from './screens/HistoryScreen';
 import { ToastContainer, type ToastMessage } from './components/Toast';
+import { ProfileIcon } from './components/ProfileIcon';
 
 type Screen = 'chat' | 'home' | 'explore' | 'search' | 'places' | 'saved' | 'history';
 
@@ -68,7 +69,6 @@ export const App = () => {
         const userData = await userResponse.json();
         setUsername(userData.username);
       } catch (err) {
-        console.error('Failed to initialize:', err);
         showToast('Failed to load user information', 'error', {
           label: 'Retry',
           onClick: () => initialize(),
@@ -107,7 +107,6 @@ export const App = () => {
         setMessages(data.messages || []);
         setHasMore(data.hasMore || false);
       } catch (err) {
-        console.error('Failed to fetch messages:', err);
         showToast('Failed to load messages', 'error', {
           label: 'Retry',
           onClick: () => fetchMessages(),
@@ -127,11 +126,9 @@ export const App = () => {
         connection = await connectRealtime({
           channel: 'chat_messages',
           onConnect: () => {
-            console.log('Connected to chat channel');
             setIsConnected(true);
           },
           onDisconnect: () => {
-            console.log('Disconnected from chat channel');
             setIsConnected(false);
           },
           onMessage: (data: Message & { chatId?: string }) => {
@@ -155,7 +152,7 @@ export const App = () => {
           },
         });
       } catch (err) {
-        console.error('Failed to connect to realtime:', err);
+        // Silently fail - connection will retry
       }
     };
 
@@ -260,6 +257,7 @@ export const App = () => {
         timestamp: data.message.timestamp,
         edited: false,
         editedAt: null,
+        avatarUrl: data.message.avatarUrl,
       };
       
       setMessages((prev) => {
@@ -270,7 +268,6 @@ export const App = () => {
         return [...prev, newMessage];
       });
     } catch (err) {
-      console.error('Failed to send message:', err);
       showToast('Failed to send message', 'error', {
         label: 'Retry',
         onClick: () => {
@@ -321,7 +318,6 @@ export const App = () => {
       setEditContent('');
       showToast('Message updated', 'success');
     } catch (err) {
-      console.error('Failed to edit message:', err);
       showToast('Failed to edit message', 'error');
     }
   };
@@ -360,7 +356,6 @@ export const App = () => {
       setDeletingMessageId(null);
       showToast('Message deleted', 'success');
     } catch (err) {
-      console.error('Failed to delete message:', err);
       showToast('Failed to delete message', 'error');
     }
   };
@@ -408,7 +403,6 @@ export const App = () => {
         }
       }, 0);
     } catch (err) {
-      console.error('Failed to load more messages:', err);
       showToast('Failed to load older messages', 'error');
     } finally {
       setLoadingMore(false);
@@ -417,7 +411,6 @@ export const App = () => {
 
   const handleNavigation = (id: string) => {
     setSelectedNav(id);
-    console.log('Navigated to:', id);
     
     // Open MessagesPanel when chat button is clicked
     if (id === 'chat') {
@@ -426,7 +419,6 @@ export const App = () => {
   };
 
   const handleChatSelect = (chatId: string) => {
-    console.log('Selected chat:', chatId);
     setCurrentChatId(chatId);
     setCurrentScreen('chat');
     setSelectedNav('chat'); // Ensure chat button is highlighted
@@ -517,17 +509,26 @@ export const App = () => {
               key={msg.id}
               className="bg-white rounded-lg p-2 md:p-3 shadow-sm border border-gray-200 relative group"
             >
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-[#d93900] text-xs md:text-sm">{msg.username}</span>
-                <span className="text-xs text-gray-400">
-                  {new Date(msg.timestamp).toLocaleTimeString()}
-                </span>
-                {msg.edited && (
-                  <span className="text-xs text-gray-400 italic">(edited)</span>
-                )}
-                {/* Action menu button - only show for current user's messages */}
-                {msg.username === username && (
-                  <div className="ml-auto relative">
+              <div className="flex items-start gap-2 mb-1">
+                {/* User Avatar */}
+                <ProfileIcon 
+                  url={msg.avatarUrl}
+                  username={msg.username}
+                  size="small"
+                  className="md:w-10 md:h-10"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-semibold text-[#d93900] text-xs md:text-sm">{msg.username}</span>
+                    <span className="text-xs text-gray-400">
+                      {new Date(msg.timestamp).toLocaleTimeString()}
+                    </span>
+                    {msg.edited && (
+                      <span className="text-xs text-gray-400 italic">(edited)</span>
+                    )}
+                    {/* Action menu button - only show for current user's messages */}
+                    {msg.username === username && (
+                      <div className="ml-auto relative">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -603,37 +604,39 @@ export const App = () => {
                       </div>
                     )}
                   </div>
-                )}
-              </div>
-              {editingMessageId === msg.id ? (
-                <div className="space-y-2">
-                  <textarea
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    disabled={!isOnline}
-                    className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#d93900] focus:border-transparent resize-none disabled:bg-gray-100"
-                    rows={3}
-                    autoFocus
-                  />
-                  <div className="flex gap-2 justify-end">
-                    <button
-                      onClick={handleCancelEdit}
-                      className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleEditMessage(msg.id)}
-                      disabled={!editContent.trim() || !isOnline}
-                      className="px-3 py-1 text-sm bg-[#d93900] text-white rounded hover:bg-[#c13300] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Save
-                    </button>
+                    )}
                   </div>
+                  {editingMessageId === msg.id ? (
+                    <div className="space-y-2">
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        disabled={!isOnline}
+                        className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#d93900] focus:border-transparent resize-none disabled:bg-gray-100"
+                        rows={3}
+                        autoFocus
+                      />
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={handleCancelEdit}
+                          className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={() => handleEditMessage(msg.id)}
+                          disabled={!editContent.trim() || !isOnline}
+                          className="px-3 py-1 text-sm bg-[#d93900] text-white rounded hover:bg-[#c13300] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-800 text-sm md:text-base break-words">{msg.content}</p>
+                  )}
                 </div>
-              ) : (
-                <p className="text-gray-800 text-sm md:text-base break-words">{msg.content}</p>
-              )}
+              </div>
             </div>
           ))}
             <div ref={messagesEndRef} />
@@ -656,7 +659,6 @@ export const App = () => {
           <button
             onClick={() => {
               // Placeholder for future functionality (e.g., attachments, emojis, etc.)
-              console.log('Plus button clicked');
             }}
             disabled={!currentChatId || !isOnline}
             className="bg-gray-100 text-gray-700 px-3 py-2 md:px-4 md:py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center disabled:bg-gray-100 disabled:cursor-not-allowed"

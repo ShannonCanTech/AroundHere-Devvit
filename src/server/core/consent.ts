@@ -24,7 +24,6 @@ export async function checkConsent(
   try {
     return await getConsent(redis, userId);
   } catch (error) {
-    console.error('Error checking consent:', error);
     throw error;
   }
 }
@@ -47,7 +46,6 @@ export async function recordConsent(
     await setConsent(redis, userId, consent);
     return consent;
   } catch (error) {
-    console.error('Error recording consent:', error);
     throw error;
   }
 }

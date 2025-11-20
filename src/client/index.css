@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Snoovatar Animations */
+@import './components/Snoovatar/animations.css';
+
 @keyframes slide-in-right {
   from {
     transform: translateX(100%);

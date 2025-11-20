@@ -26,7 +26,6 @@ export const useCounter = () => {
         setState({ count: data.count, username: data.username, loading: false });
         setPostId(data.postId);
       } catch (err) {
-        console.error('Failed to init counter', err);
         setState((prev) => ({ ...prev, loading: false }));
       }
     };
@@ -36,7 +35,6 @@ export const useCounter = () => {
   const update = useCallback(
     async (action: 'increment' | 'decrement') => {
       if (!postId) {
-        console.error('No postId – cannot update counter');
         return;
       }
       try {
@@ -49,7 +47,7 @@ export const useCounter = () => {
         const data: IncrementResponse | DecrementResponse = await res.json();
         setState((prev) => ({ ...prev, count: data.count }));
       } catch (err) {
-        console.error(`Failed to ${action}`, err);
+        // Silently fail
       }
     },
     [postId]

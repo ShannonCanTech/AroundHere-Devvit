@@ -49,5 +49,10 @@ export type ErrorResponse = {
   message: string;
 };
 
+export type UserAvatarResponse = {
+  username: string;
+  avatarUrl: string;
+};
+
 // Import types from chat.ts
 import type { Message, ChatListItem } from './chat';

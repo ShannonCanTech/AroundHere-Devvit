@@ -18,7 +18,7 @@ const WelcomeScreen: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error('Error checking consent:', error);
+        // Silently fail
       } finally {
         setIsCheckingConsent(false);
       }

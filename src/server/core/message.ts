@@ -14,6 +14,7 @@ import {
 } from './redis/message';
 import { updateChatLastMessage } from './redis/chat';
 import { cleanOldMessages } from './retention';
+import { getAvatarUrl, getAvatarUrls } from './avatar';
 
 /**
  * Generate a unique message ID
@@ -46,8 +47,20 @@ export async function sendMessage(
   // Generate unique message ID
   const messageId = generateMessageId();
 
-  // Create message object with timestamp
+  // Create message object with timestamp and avatar
   const timestamp = Date.now();
+  let avatarUrl: string | undefined;
+  try {
+    avatarUrl = await getAvatarUrl(username);
+    console.log(`[Message] Avatar URL for ${username}: ${avatarUrl?.substring(0, 50)}...`);
+  } catch (error) {
+    // If avatar fetch fails, use chat-session-specific fallback
+    console.error(`[Message] Avatar fetch failed for ${username}, using fallback:`, error);
+    const { getChatSessionFallbackAvatar } = await import('./chatAvatarFallback');
+    avatarUrl = await getChatSessionFallbackAvatar(userId, chatId);
+    console.log(`[Message] Fallback avatar URL: ${avatarUrl?.substring(0, 50)}...`);
+  }
+  
   const message: Message = {
     id: messageId,
     userId,
@@ -56,7 +69,10 @@ export async function sendMessage(
     timestamp,
     edited: false,
     editedAt: null,
+    avatarUrl,
   };
+  
+  console.log(`[Message] Created message ${messageId} with avatarUrl: ${avatarUrl ? 'present' : 'MISSING'}`);
 
   // Store in Redis sorted set
   await storeMessage(chatId, message);
@@ -95,8 +111,43 @@ export async function getMessages(
   // Fetch messages from Redis sorted set with limit and before timestamp
   const result = await getMessagesFromRedis(chatId, limit, before);
 
+  // Enrich messages with avatar URLs
+  const usernames = result.messages.map(msg => msg.username);
+  const userIds = result.messages.map(msg => msg.userId);
+  
+  let avatarUrls: Record<string, string> = {};
+  try {
+    avatarUrls = await getAvatarUrls(usernames);
+  } catch (error) {
+    // If batch avatar fetch fails, continue without avatars
+    console.error('Failed to fetch avatar URLs:', error);
+  }
+  
+  // Import chat session fallback
+  const { getChatSessionFallbackAvatar } = await import('./chatAvatarFallback');
+  
+  // Enrich with avatars, using chat-session fallback if needed
+  const enrichedMessages = await Promise.all(
+    result.messages.map(async (msg) => {
+      let avatarUrl = avatarUrls[msg.username];
+      
+      // If no avatar URL, use chat-session-specific fallback
+      if (!avatarUrl) {
+        avatarUrl = await getChatSessionFallbackAvatar(msg.userId, chatId);
+      }
+      
+      return {
+        ...msg,
+        avatarUrl,
+      };
+    })
+  );
+
   // Return messages array and hasMore flag
-  return result;
+  return {
+    messages: enrichedMessages,
+    hasMore: result.hasMore,
+  };
 }
 
 /**

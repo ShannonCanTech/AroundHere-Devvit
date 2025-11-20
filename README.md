@@ -1,406 +1,406 @@
-# Happening App - Real-Time Multi-Chat Messaging on Reddit
+# Happening - Real-Time Chat for Reddit Communities
 
-> **Transform Reddit posts into live chat rooms.** Happening App is a sophisticated real-time messaging platform built on Reddit's Devvit platform that enables users to create unlimited chat conversations, send and receive messages instantly with zero latency, edit and delete their messages with full control, and maintain persistent chat history across sessions - all without leaving Reddit.
+> **A modern, feature-rich real-time chat application built on Reddit's Devvit platform.** Connect with Reddit users instantly through persistent chat conversations with full message management capabilities.
 
-## What This Application Is
+## 🎯 What Is This?
 
-Happening App is a **real-time chat messaging application** built on Reddit's Devvit platform. It provides a modern social messaging experience with multiple navigation screens (Home, Explore, Search, Places, Saved, History) and a dedicated chat system where communities can have instant conversations with live message updates, full editing capabilities, organized multi-chat management, and comprehensive error handling with toast notifications.
+**Happening is a real-time messaging platform for Reddit that brings modern chat functionality directly into Reddit posts.**
 
-The app features a **guided onboarding experience** that welcomes new users with an engaging introduction screen and requires acceptance of Privacy Policy and Terms & Conditions before accessing the chat interface. Returning users bypass onboarding and go directly to the home screen.
+This application provides a complete chat experience with real-time messaging, persistent history, and full message control. After a streamlined onboarding flow, users can create and manage multiple chat conversations, send messages instantly, edit or delete their messages, and browse message history with automatic pagination. The app features a responsive design that adapts seamlessly between desktop and mobile devices, with smart avatar display using Reddit snoovatars and intelligent fallbacks.
 
-This is **not a game** - it's a communication and social platform that brings modern instant messaging features to Reddit, allowing users to have real-time conversations within posts without leaving the Reddit ecosystem.
+**What makes it special:**
+- 🎯 **Streamlined Onboarding** - Welcome screen with feature highlights, terms acceptance with scrollable policy overlays, and consent tracking
+- 💬 **Real-Time Messaging** - Instant message delivery using Devvit's realtime API with live updates to all participants
+- 🗂️ **Multiple Chats** - Create and manage multiple chat conversations with participant management
+- 👤 **Smart Avatars** - Display Reddit snoovatars with 3-tier fallback system (custom → Reddit defaults → app default)
+- ✏️ **Message Editing** - Edit your messages after sending with inline editor and save/cancel controls
+- 🗑️ **Message Deletion** - Delete messages with confirmation dialog to prevent accidents
+- 📜 **Message History** - Persistent storage with automatic pagination (50 messages per page) and scroll-to-load
+- 📱 **Responsive Design** - Desktop collapsible sidebar and mobile bottom navigation with coordinated panel transitions
+- 🔔 **Toast Notifications** - Real-time feedback for all actions with optional retry buttons
+- 🌐 **Offline Detection** - Graceful handling of network issues with visual indicators and disabled actions
+- 🎨 **Modern UI** - Clean, polished interface with smooth animations and Reddit orange (#d93900) color scheme
 
-## What This Application Does
+## 🔍 Quick Overview
 
-Happening App provides a complete social and messaging experience directly within Reddit posts. Unlike traditional Reddit comments that require page refreshes, this app delivers a modern multi-screen interface with true real-time chat capabilities, instant message delivery, live updates, and persistent conversation history.
+**What is Happening?** A **real-time chat platform** that brings modern messaging to Reddit communities.
 
-**Core Capabilities:**
+**How it works:**
+1. **Launch the app** - Opens with automatic Reddit authentication
+2. **Complete onboarding** - First-time users see a welcome screen with feature highlights, then accept Privacy Policy and Terms & Conditions
+3. **Home screen** - View your personalized welcome with your Reddit avatar and username
+4. **Browse chats** - Access the Messages panel to view existing conversations with participant names and last messages
+5. **Start chatting** - Create new chats or select existing ones to begin messaging
+6. **Send messages** - Type and send messages instantly with real-time delivery to all participants
+7. **Edit/Delete** - Full control over your messages with inline editing and confirmation dialogs
+8. **Load history** - Scroll up or click "Load More" to view older messages (50 per page)
+9. **Stay connected** - Real-time updates keep conversations flowing with connection status indicators
 
-- **Guided Onboarding Flow** - New users see a welcome screen introducing the app's features, followed by a terms acceptance screen with Privacy Policy and Terms & Conditions. Consent is tracked server-side in Redis, so returning users skip directly to the home screen.
-- **Multi-Screen Navigation** - Navigate between Home, Explore, Search, Places, Saved, and History screens through desktop sidebar or mobile bottom navigation
-- **Multi-Chat Architecture** - Create and manage unlimited independent chat conversations, each with its own message history and participant list
-- **Instant Real-Time Messaging** - Messages appear immediately for all participants using Devvit's realtime broadcasting (no page refresh needed)
-- **Full Message Control** - Edit your messages with visible "(edited)" indicators, or delete them permanently with confirmation dialogs
-- **Message Pagination** - Load older messages on-demand with "Load More" button or automatic scroll-to-load behavior
-- **Zero-Friction Authentication** - Your Reddit username is automatically used - no login, passwords, or OAuth flows required
-- **Persistent Storage** - All messages and chat metadata are stored in Redis with chat-specific isolation, surviving server restarts
-- **Smart UI Adaptation** - Desktop users get a collapsible sidebar (64px/256px), mobile users get a bottom navigation bar
-- **Multi-Panel Navigation** - Coordinated slide-out panels for browsing chats, viewing notifications, and accessing settings
-- **Chat Session Browser** - MessagesPanel displays all your chats with preview messages, timestamps, and unread counts
-- **Live Connection Status** - Visual indicators show your realtime connection state (green = connected, gray = disconnected)
-- **Toast Notifications** - Non-intrusive error and success messages with retry actions for failed operations
-- **Offline Detection** - Automatic detection of network connectivity with visual warnings and disabled actions when offline
-- **Reddit-Native Design** - Familiar Reddit orange (#d93900) branding with modern, responsive UI patterns
+**Perfect for:**
+- 💬 **Community discussions** - Real-time conversations within Reddit communities
+- 🤝 **Direct messaging** - Private conversations between Reddit users
+- 📢 **Live events** - Coordinate and discuss during live events
+- 🎮 **Gaming communities** - Team coordination and strategy discussions
+- 📚 **Study groups** - Collaborative learning and Q&A sessions
 
-## What Makes This Application Innovative
+## 🌟 What Makes Happening Innovative
 
-Happening App demonstrates advanced capabilities of the Devvit platform and modern real-time web architecture, creating a comprehensive social messaging platform within Reddit:
+This application brings modern chat functionality to Reddit with features that rival standalone messaging apps:
 
-1. **Seamless Onboarding with Multiple Entry Points** - Leverages Devvit 0.12.2's new inline webview capabilities with multiple HTML entry points (welcome, terms, home). New users see an engaging welcome screen in inline mode (fits within the post unit), then a terms acceptance screen, before entering the full app interface in expanded mode. User consent is tracked server-side in Redis with timestamp and version tracking, enabling automatic bypass for returning users. This creates a polished first-run experience while maintaining compliance with privacy requirements.
+### 🎯 Streamlined Onboarding Flow
+- **Welcome Screen** - Beautiful gradient interface showcasing key features (real-time messaging, multiple chats, edit/delete, persistent history)
+- **Terms Acceptance** - Clear presentation of Privacy Policy and Terms & Conditions with scrollable overlays
+- **Consent Tracking** - User acceptance stored in Redis with timestamp and version number
+- **Smart Bypass** - Returning users automatically skip onboarding and go straight to the app
+- **Seamless Transition** - Smooth navigation from inline welcome/terms screens to expanded chat interface
 
-2. **Multi-Chat Architecture with Isolated Channels** - Each chat conversation is completely independent with its own message history, participant list, and realtime broadcast channel. The MessagesPanel provides a unified interface to browse all active chats with live preview messages, relative timestamps ("5m ago", "Yesterday"), and unread count badges. Users can create unlimited chats and switch between them instantly.
+### 👤 Smart Avatar System
+- **Reddit Snoovatars** - Displays user's custom Reddit avatars automatically via `getSnoovatarUrl()` API
+- **Intelligent Fallbacks** - Gracefully handles missing avatars with Reddit's 8 default avatars based on username hash
+- **Cached Loading** - Redis caching for fast avatar display (1-hour expiration)
+- **Loading States** - Smooth skeleton animations while avatars load
+- **Error Handling** - Automatic fallback to custom default snoo icon on errors
 
-3. **Full Message Lifecycle Management** - Users have complete control over their messages with edit and delete capabilities. Edited messages display an "(edited)" indicator with timestamp tracking, while deletion requires confirmation through a modal dialog. Authorization checks ensure users can only modify their own messages, maintaining security and accountability.
+### 💬 Real-Time Communication
+- **Instant delivery** - Messages appear immediately using Devvit's realtime API
+- **Live updates** - See new messages as they arrive without refreshing
+- **Connection status** - Visual indicators show when you're connected
+- **Offline detection** - Graceful handling of network issues with user feedback
 
-4. **Intelligent Message Pagination** - Implements efficient message loading with two complementary approaches:
-   - **Load More Button** - Appears at the top of the message list when older messages are available, fetching 50 messages at a time
-   - **Scroll-to-Load** - Automatically loads more messages when users scroll within 100px of the top
-   - **Scroll Position Preservation** - Maintains scroll position after loading older messages to prevent jarring jumps
-   - **Lazy Loading** - Only fetches messages when needed, reducing initial load time and memory usage
+### 🎨 Modern User Interface
+- **Responsive Design** - Seamless experience on desktop and mobile
+- **Desktop Sidebar** - Collapsible navigation (64px collapsed, 256px expanded)
+- **Mobile Bottom Nav** - Fixed navigation bar optimized for touch
+- **Slide-Out Panels** - Multiple coordinated panels (Messages, Settings, Notifications)
+- **Toast Notifications** - Real-time feedback with success/error/info variants
+- **Smooth Animations** - Polished transitions and loading states
+- **Reddit Styling** - Familiar Reddit orange (#d93900) color scheme
 
-5. **Chat-Specific Realtime Broadcasting** - Leverages Devvit's `connectRealtime` API with intelligent message filtering. Each message includes a `chatId` field, and the client only displays messages matching the currently active chat. This architecture prevents message leakage between conversations while maintaining instant updates across all chats simultaneously.
+### ✏️ Full Message Control
+- **Edit Messages** - Inline editor with save/cancel controls
+- **Delete Messages** - Confirmation dialog prevents accidental deletion
+- **Authorization Checks** - Users can only edit/delete their own messages
+- **Edit Indicators** - Edited messages show "(edited)" label
+- **Optimistic Updates** - Messages appear instantly before server confirmation
+- **Duplicate Prevention** - Message IDs ensure no duplicate messages
 
-6. **Infrastructure-Grade Real-Time Communication** - Uses Devvit's `connectRealtime` API to broadcast messages instantly through Reddit's infrastructure. Unlike traditional polling or websockets, this provides reliable, scalable real-time updates without managing socket connections. The system handles connection state, reconnection logic, and message delivery automatically.
+## 📖 How to Use Happening
 
-7. **Frictionless Reddit Authentication** - Zero configuration required - users are automatically authenticated through their active Reddit session. No login screens, passwords, or OAuth flows. The app calls `reddit.getCurrentUsername()` server-side to securely identify users, making it completely seamless to start chatting.
+### Step-by-Step Guide
 
-8. **Persistent Redis Storage with Chat Isolation** - Messages are stored in Redis using a chat-specific key structure (`chat:{chatId}:messages`) with sorted sets for efficient chronological retrieval. Each message has a unique ID format (`{chatId}:{timestamp}:{random}`) ensuring persistence across sessions, surviving server restarts, and preventing duplicates. Chat metadata (participants, timestamps) is stored separately for fast access. User consent data is stored with key pattern `user:{userId}:consent` containing acceptance status, timestamp, and terms version.
+#### 1. **Launch the App**
+- Open the app in a Reddit post where it's installed
+- **First-time users**: Complete the onboarding flow
+  - **Welcome Screen** - See app features (real-time messaging, multiple chats, edit/delete, persistent history) and click "Get Started"
+  - **Terms Screen** - Review and accept Privacy Policy and Terms & Conditions by clicking links to view full documents in scrollable overlays
+  - Click "I Agree" to record consent and proceed to the main app interface
+- **Returning users**: Automatically bypass onboarding (consent checked on load, stored in Redis with timestamp and version)
+- The app loads with the **Home Screen** showing your personalized welcome
 
-9. **Optimistic UI Updates with Deduplication** - Messages appear instantly in the sender's UI while being confirmed by the server in the background, creating zero perceived latency. The app intelligently prevents duplicate messages by comparing message IDs when they arrive via the realtime channel, ensuring a clean, consistent message feed.
+#### 2. **Home Screen**
+The home screen displays a personalized welcome with your Reddit identity:
 
-10. **Adaptive Mobile-First Design** - The UI intelligently adapts to screen size:
-   - **Desktop**: Collapsible sidebar (64px collapsed, 256px expanded) with smooth CSS transitions and hover states
-   - **Mobile**: Fixed bottom navigation bar (64px height) positioned above the input area, following iOS/Android patterns
-   - **Both**: Multiple slide-out panels (LeftPanel, MessagesPanel, NotificationPanel, SettingsPanel) that overlay content with coordinated 300ms transitions
-   - This respects Devvit's inline mode constraints while providing a native app-like experience
+**What You See:**
+- **Beautiful gradient background** - Blue-to-green gradient creates welcoming atmosphere
+- **Your avatar** - Large Reddit snoovatar (192px) displayed in rounded container with border
+- **Welcome message** - Personalized greeting showing your Reddit username
+- **Loading state** - Smooth "Loading avatar tests..." message while fetching your information
+- **Clean centered layout** - Puts your identity front and center
 
-11. **Multi-Screen Social Platform Architecture** - Goes beyond simple chat to provide a complete social experience with dedicated screens for Home, Explore, Search, Places, Saved, and History. Each screen is a placeholder for future features, creating a foundation for a full-featured social platform. The app starts on the Home screen by default, providing a familiar social media experience before users dive into messaging.
+This screen creates a welcoming first impression and showcases your Reddit identity with your actual snoovatar.
 
-12. **Seamless Reddit Integration** - Runs entirely within Reddit's ecosystem without external redirects, iframes, or page reloads. The app appears directly in posts with Reddit's signature orange (#d93900) branding, feeling like a natural extension of the Reddit platform rather than a third-party add-on.
+#### 3. **Main Chat Interface**
+Access the chat interface by clicking the **Chat** button:
+- **Top navigation** - Back button and notification bell
+- **Desktop sidebar** - Collapsible navigation with Chat, Search, Home, Places
+- **Mobile bottom nav** - Home, Chat, Search, Places buttons
+- **Message area** - Displays chat messages with avatars and timestamps
+- **Input field** - Type your messages here
+- **Send button** - Click to send your message
+- **Connection indicator** - Shows online/offline status
 
-13. **Coordinated Multi-Panel Navigation System** - Features four specialized overlay panels with intelligent transition coordination:
-   - **LeftPanel** - Primary navigation menu (Home, Messages, Explore, Search, Places, Saved, History, Settings)
-   - **MessagesPanel** - Chat session browser with 💬 avatars, last message previews, relative timestamps, and unread badges
-   - **NotificationPanel** - Categorized alerts (messages, mentions, system) with unread indicators and mark-all-as-read
-   - **SettingsPanel** - App configuration and preferences
-   - Panels use 300ms transition delays to prevent overlap, creating smooth, polished animations
+The interface adapts seamlessly between desktop and mobile devices!
 
-14. **Type-Safe Component Architecture** - Built with reusable React components using TypeScript for compile-time type safety and Tailwind CSS for consistent, utility-first styling. The modular architecture (Sidebar, MobileNav, TopNav, panels, screens) makes the codebase maintainable, testable, and extensible for future features.
+#### 4. **Browse and Select Chats**
+Access your chat conversations:
 
-15. **Comprehensive Error Handling with Toast Notifications** - Features a sophisticated toast notification system that provides non-intrusive feedback for all user actions:
-   - **Error Toasts** (red) - Display when operations fail (e.g., "Failed to send message", "Failed to load chats") with optional retry actions
-   - **Success Toasts** (green) - Confirm successful operations (e.g., "Message updated", "Message deleted", "Connection restored")
-   - **Info Toasts** (blue) - Provide informational messages and system updates
-   - **Auto-dismiss** - Toasts automatically disappear after 5 seconds with smooth animations
-   - **Manual dismiss** - Users can close toasts immediately by clicking the X button
-   - **Retry actions** - Failed operations include a "Retry" button that re-attempts the action
-   - **Stacking** - Multiple toasts stack vertically in the top-right corner without overlapping
-   - **Responsive positioning** - Toasts adapt to screen size and remain visible above all other UI elements (z-index 100)
+**On Desktop:**
+- Click the **Chat** button in the left sidebar
+- Or click the **hamburger menu** (☰) in the top-left to open the navigation panel
+- Select **Messages** from the panel
 
-16. **Network Resilience and Offline Mode** - Intelligent handling of network connectivity issues:
-   - **Automatic detection** - Monitors browser online/offline events using `navigator.onLine` and window event listeners
-   - **Visual indicators** - Yellow banner appears at the top when offline: "No internet connection" with warning icon
-   - **Disabled actions** - Send button, edit, delete, and other network-dependent actions are disabled when offline
-   - **Connection restoration** - Shows success toast when connection is restored: "Connection restored"
-   - **Graceful degradation** - Users can still read cached messages and browse the UI while offline
-   - **Input placeholders** - Text input shows "Offline - cannot send messages" when disconnected
+**On Mobile:**
+- Tap the **Chat** icon in the bottom navigation bar
+- Or tap the **hamburger menu** (☰) in the top-left
+- Select **Messages** from the panel
+
+**In the Messages Panel:**
+- View all your active chats with participant names and last message
+- Use the search bar to find specific chats
+- Click **"New Message"** to start a new chat
+- Tap any chat to open it and start messaging
+
+**Chat List Features:**
+- Real user avatars (Reddit snoovatars with smart fallbacks)
+- Last message preview
+- Timestamp of last activity
+- Unread message indicators (coming soon)
+
+#### 5. **Send and Manage Messages**
+Communicate in real-time:
+
+**Sending Messages:**
+- Type your message in the input field at the bottom
+- Press **Enter** to send (or click the send button)
+- Messages appear instantly with your avatar and username
+- Timestamps show when each message was sent
+
+**Editing Messages:**
+- Hover over your message to reveal the **three-dot menu** (⋮)
+- Click the menu and select **"Edit"**
+- Modify your message in the inline editor
+- Click **"Save"** to update or **"Cancel"** to discard changes
+- Edited messages show an "(edited)" indicator
+
+**Deleting Messages:**
+- Hover over your message to reveal the **three-dot menu** (⋮)
+- Click the menu and select **"Delete"**
+- Confirm deletion in the popup dialog
+- Message is permanently removed from the chat
+
+**Message Features:**
+- Real-time delivery to all participants
+- Automatic scroll to newest messages
+- Load older messages by scrolling up or clicking "Load More"
+- Duplicate prevention ensures messages appear only once
+
+#### 6. **Navigate the App**
+Explore different sections:
+
+**Desktop Navigation (Sidebar):**
+- **Home** - Avatar testing slideshow with 12 comprehensive test slides
+- **Chat** - Access your messages and conversations
+- **Search** - Search placeholder screen (coming soon)
+- **Places** - Places placeholder screen (coming soon)
+
+**Mobile Navigation (Bottom Bar):**
+- Same four main sections optimized for touch
+- Fixed at the bottom for easy thumb access
+- Active section highlighted in Reddit orange
+
+**Additional Panels:**
+- **Left Panel** - Full navigation menu with Explore, Saved, History, Settings
+- **Messages Panel** - Browse and manage your chats
+- **Notifications Panel** - View alerts and updates
+- **Settings Panel** - Configure app preferences
+
+**Pro Tips:**
+- **Stay connected** - Green dot shows you're online
+- **Offline mode** - Yellow banner warns when offline, actions disabled
+- **Toast notifications** - Success/error messages appear in bottom-right
+- **Retry actions** - Failed operations show retry buttons in toasts
+- **Smooth transitions** - Panels slide in/out with coordinated timing
+- **Keyboard shortcuts** - Enter to send, Escape to close panels
+
+Think of it as a **comprehensive avatar testing tool and modern messaging app** built right into Reddit, perfect for developers testing avatar systems and users wanting polished chat functionality!
+
+## 📋 What This Application Does
+
+This is a **real-time chat platform** for Reddit that brings modern messaging functionality directly into Reddit posts. It provides a complete chat experience with onboarding flow, persistent message history, full message management capabilities, and responsive design that works beautifully on both desktop and mobile devices.
+
+**Onboarding & Authentication:**
+
+- **Welcome Screen** - First-time users see an engaging welcome screen with app logo, tagline, and four feature highlights (real-time messaging, multiple chats, edit/delete, persistent history)
+- **Terms Acceptance** - Users must review and accept Privacy Policy and Terms & Conditions before using the app
+- **Consent Tracking** - User acceptance stored in Redis with timestamp and version number for compliance
+- **Smart Bypass** - Returning users automatically skip onboarding based on consent check
+- **Reddit Authentication** - Automatic authentication using Reddit's session, no separate login required
+
+**Core Chat Features:**
+
+- **Real-Time Messaging** - Instant message delivery using Devvit's realtime API with live updates to all participants
+- **Multiple Chats** - Create and manage multiple chat conversations with different participants
+- **Message History** - Persistent storage in Redis with automatic pagination (50 messages per page)
+- **Message Editing** - Edit your messages after sending with inline editor and save/cancel controls
+- **Message Deletion** - Delete messages with confirmation dialog to prevent accidental deletion
+- **User Avatars** - Display Reddit snoovatars with smart 3-tier fallback system (custom → Reddit defaults → app default)
+- **Connection Status** - Visual indicators show online/offline state with automatic reconnection
+- **Toast Notifications** - Real-time feedback for all actions (success, error, info) with optional retry buttons
+
+**User Interface:**
+
+- **Responsive Design** - Seamless experience on desktop (sidebar) and mobile (bottom nav)
+- **Desktop Sidebar** - Collapsible navigation (64px collapsed, 256px expanded) with smooth transitions
+- **Mobile Bottom Nav** - Fixed navigation bar optimized for touch with 4 main sections
+- **Slide-Out Panels** - Multiple panels (Messages, Settings, Notifications) with coordinated transitions
+- **Top Navigation** - Back button and notification bell for quick access
+- **Message Display** - Clean message cards with avatars, usernames, timestamps, and edit indicators
+- **Input Area** - Message input field with send button and placeholder text
+
+**Data Management:**
+
+- **Redis Storage** - All data stored in Redis with automatic retention policies
+- **Message Retention** - Messages automatically deleted after 90 days
+- **Chat Retention** - Inactive chats (no messages for 180 days) automatically removed
+- **User Chat Index** - Efficient lookup of user's chats using sorted sets
+- **Optimistic Updates** - Messages appear instantly before server confirmation
+- **Duplicate Prevention** - Message IDs ensure no duplicate messages in UI
+
+**Authentication & Security:**
+
+- **Reddit Authentication** - Automatic authentication using Reddit's session
+- **Authorization Checks** - Users can only edit/delete their own messages
+- **Consent Tracking** - Privacy Policy and Terms & Conditions acceptance stored in Redis
+- **Onboarding Flow** - First-time users complete welcome and terms screens
+
+## 🚀 What Makes Happening Innovative
+
+This application brings modern chat functionality to Reddit with features that rival standalone messaging apps, all built directly into the Reddit platform.
+
+**Key Innovation**: Complete chat experience with streamlined onboarding, real-time messaging, full message management capabilities, persistent history, and responsive design that works seamlessly on both desktop and mobile devices - all within Reddit's ecosystem.
+
+### 1. Streamlined Onboarding with Consent Tracking
+Implements a professional onboarding flow with welcome screen showcasing features, terms acceptance with scrollable policy overlays, and consent tracking in Redis. First-time users see the welcome screen with app logo, tagline, and four feature highlights, then review Privacy Policy and Terms & Conditions before accepting. Consent is stored with timestamp and version number for compliance. Returning users automatically bypass onboarding based on consent check, providing a seamless experience.
+
+### 2. Real-Time Message Broadcasting
+Uses Devvit's realtime API to broadcast messages instantly to all participants. Messages include a `chatId` field for filtering, ensuring users only see messages from their current chat. The system handles connection/disconnection gracefully with visual indicators (green/gray dots) and automatic reconnection. Optimistic updates show messages immediately before server confirmation for a snappy user experience. Duplicate prevention ensures messages appear only once.
+
+### 3. Full Message Management
+Provides complete control over messages with edit and delete capabilities. Users can edit messages inline with save/cancel controls, and edited messages show an "(edited)" indicator. Deletion requires confirmation dialog to prevent accidents. Authorization checks ensure users can only modify their own messages (403 errors for unauthorized attempts). All changes are persisted to Redis and broadcast to other participants in real-time.
+
+### 4. Responsive Multi-Platform Design
+Seamlessly adapts between desktop and mobile with different navigation patterns. Desktop features a collapsible sidebar (64px collapsed, 256px expanded) with smooth transitions and four main sections (Home, Chat, Search, Places). Mobile uses a fixed bottom navigation bar (64px height) optimized for thumb access with the same four sections. Both platforms share the same core functionality with platform-appropriate UI patterns. Multiple slide-out panels (LeftPanel, MessagesPanel, SettingsPanel, NotificationPanel) coordinate transitions with 300ms delays to prevent overlap.
+
+### 5. Smart Avatar System
+Displays Reddit snoovatars with a sophisticated 3-tier fallback system. Primary source is Reddit's `getSnoovatarUrl()` API for custom snoovatars (i.redd.it/snoovatar/avatars/). Falls back to Reddit's 8 default avatars (www.redditstatic.com/avatars/defaults/) based on username hash for consistent appearance. Final fallback is a custom default snoo icon (/default-snoo.png). Avatars are cached in Redis for performance (1-hour expiration) and include loading states with animated skeleton placeholders. Error handling automatically triggers fallback with opacity reduction.
+
+### 6. Persistent Message History
+Stores all messages in Redis using sorted sets (chat:{chatId}:messages) for efficient pagination. Messages are automatically paginated (50 per page) with "Load More" button at the top and scroll-to-load behavior when scrolling near the top (within 100px). Scroll position is preserved when loading older messages using scroll height calculations. Automatic retention policies delete messages after 90 days and inactive chats (no messages for 180 days) to manage storage efficiently.
+
+### 7. Advanced Error Handling
+Comprehensive error handling with toast notifications for all actions (success/error/info variants). Network failures show retry buttons in toasts that restore user input. Offline detection using `navigator.onLine` and window event listeners disables actions and shows yellow warning banner. Connection restoration shows success toast. All API errors are caught and displayed with user-friendly messages (e.g., "Failed to send message", "You can only edit your own messages"). Failed operations can be retried without losing user input.
+
+### 8. Coordinated Panel Transitions
+Multiple slide-out panels (LeftPanel, MessagesPanel, SettingsPanel, NotificationPanel) coordinate their transitions to prevent overlap. When Messages is clicked in LeftPanel, it closes and MessagesPanel opens after 300ms delay. When MessagesPanel closes, it reopens LeftPanel after 300ms delay. Panels use `isOpen && !isOtherPanelOpen` logic to ensure only one panel is visible at a time. This creates a polished, professional feel without jarring transitions or simultaneous panel displays.
+
+This application provides a modern, feature-rich messaging experience built directly into Reddit, bringing the convenience of standalone chat apps to Reddit communities without requiring users to leave the platform.
 
 ## Tech Stack
 
 - **[Devvit](https://developers.reddit.com/)**: Reddit's developer platform for building immersive apps
 - **[React](https://react.dev/)**: Frontend UI framework with hooks for state management
 - **[Express](https://expressjs.com/)**: Backend API server
-- **[Redis](https://redis.io/)**: Message persistence and data storage
+- **[Redis](https://redis.io/)**: Data storage for caching and consent tracking
 - **[Vite](https://vite.dev/)**: Build tool and bundler
 - **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first styling framework
 - **[TypeScript](https://www.typescriptlang.org/)**: Type-safe development across client and server
 
-## How to Use Happening App
+## 📖 Complete Usage Guide
 
-### Complete User Guide
+**Happening** is a full-featured real-time chat application for Reddit communities. This guide covers all features and functionality.
 
-#### 1. First-Time User Experience (Onboarding)
+### Getting Started
 
-**For New Users:**
-- Navigate to a Reddit post where Happening App is installed (moderators enable it in their subreddits)
-- You'll see the **Welcome Screen** displayed inline within the post:
-  - App logo and name "Happening"
-  - Tagline: "Real-time chat for Reddit communities"
-  - Four key features highlighted with icons:
-    - ⚡ Real-time messaging - Instant message delivery
-    - 💬 Multiple chats - Manage conversations
-    - ✏️ Edit and delete - Full message control
-    - 📦 Persistent history - Messages saved
-  - Prominent "Get Started" button with gradient styling
-- Click **"Get Started"** to proceed to the Terms Screen
-- The **Terms Screen** displays:
-  - Header: "Before You Continue"
-  - Explanation that using the app requires accepting the Privacy Policy and Terms & Conditions
-  - Clickable links to view each document in an overlay
-  - "I Agree" button to accept and continue
-  - "Back" button to return to welcome screen
-- Click **Privacy Policy** or **Terms & Conditions** to read the full documents:
-  - A scrollable overlay appears with the complete text
-  - Close button (X) in the top-right corner
-  - Press Escape key or click backdrop to close
-  - Overlay prevents body scroll while open
-- Click **"I Agree"** to accept the terms:
-  - Your consent is recorded in Redis with timestamp and version (1.0)
-  - The app transitions to expanded mode and loads the main chat interface
-  - Your Reddit username is automatically authenticated - no login or password required
-  - The app loads your chat list and establishes a realtime connection
+#### 1. First-Time Users: Onboarding Flow
 
-**For Returning Users:**
-- When you view the post again, the app automatically checks your consent status
-- If you've already accepted the terms, you bypass the welcome and terms screens entirely
-- You're taken directly to the main chat interface
-- Your consent persists across sessions and devices (stored in Redis)
+**Welcome Screen** (Inline Mode):
+- App logo with gradient background
+- App name: "Happening"
+- Tagline: "Real-time chat for Reddit communities"
+- Four feature highlights with icons
+- "Get Started" button navigates to Terms Screen
 
-#### 2. Launch the Application (After Onboarding)
+**Terms Screen** (Inline Mode):
+- Header: "Before You Continue"
+- Links to Privacy Policy and Terms & Conditions (open in scrollable overlays)
+- "I Agree" button records consent in Redis and navigates to testing interface
+- "Back" button returns to Welcome Screen
 
-- Once you've completed onboarding, the app opens directly to the **Home screen**
-- Your Reddit username is automatically authenticated - no login or password required
-- The app establishes a realtime connection for live chat updates
-- You'll see the main interface with navigation options to access different screens and features
+**Returning Users**:
+- Consent check happens automatically on load
+- If consent exists in Redis, onboarding is bypassed
+- Direct navigation to Avatar Testing Interface
 
-#### 3. Understanding the Interface
+#### 2. Home Screen
 
-**Desktop Layout:**
-- **Left Sidebar** - Collapsible navigation menu with Reddit logo and icons for Home, Chat, Search, and Places
-  - Click the chevron button at the bottom to collapse/expand the sidebar
-  - Collapsed state shows icon-only view (64px wide)
-  - Expanded state shows icons with labels (256px wide)
-  - The active screen is highlighted in Reddit orange (#d93900)
-- **Top Header** - Shows current screen title (e.g., "Home", "Explore", "Search") with back arrow and notification bell
-  - Back arrow button opens the LeftPanel navigation menu
-  - Bell icon opens the NotificationPanel (shows a yellow dot indicator)
-- **Main Content Area** - Displays the current screen (Home, Explore, Search, Places, Saved, History, or Chat)
-- **Bottom Input Bar** (Chat screen only) - Text input field with plus button and send button
+After onboarding, you see the **Home Screen** with:
+- **Gradient background** - Beautiful blue-to-green gradient
+- **Your avatar** - Large Reddit snoovatar (128px) with smart fallbacks
+- **Welcome message** - Personalized greeting with your username
+- **Loading state** - Smooth animation while fetching your avatar
+- **Clean layout** - Centered design puts your identity front and center
 
-**Mobile Layout:**
-- **Top Header** - Shows current screen title with back arrow and notification bell
-  - Back arrow opens the LeftPanel navigation menu
-  - Bell icon opens the NotificationPanel
-- **Main Content Area** - Full-width display of the current screen
-- **Bottom Navigation Bar** - Fixed navigation with Home, Chat, Search, and Places icons
-  - Active tab highlighted in Reddit orange
-  - Labels displayed under each icon
-- **Input Bar** (Chat screen only) - Sits just above the bottom navigation (64px clearance)
+This personalized home screen creates a welcoming first impression and showcases your Reddit identity.
 
-#### 4. Creating and Selecting Chats
+#### 3. Creating and Managing Chats
 
-**To Create a New Chat:**
-1. Click the **back arrow** (←) in the top-left corner to open the LeftPanel
-2. Click **"Messages"** to open the MessagesPanel
-3. Click the **"New Message"** button at the bottom
-4. A new chat is created instantly with a unique ID
-5. You're automatically taken to the new empty chat, ready to send messages
-6. The chat appears in your chat list for future access
+**Create a New Chat:**
+1. Open the Messages Panel (Chat button or hamburger menu → Messages)
+2. Click the **"New Message"** button at the top
+3. Select participants from your Reddit contacts
+4. Start sending messages immediately
 
-**To Select an Existing Chat:**
-1. Click the **back arrow** (←) in the top-left to open the LeftPanel
-2. Click **"Messages"** to open the MessagesPanel
-3. Browse your chat sessions - each displays:
-   - **💬 Chat avatar** - Visual identifier for the conversation
-   - **Chat title** - Descriptive name or truncated chat ID
-   - **Last message preview** - Shows username and message snippet
-   - **Relative timestamp** - "5m", "2h", "Yesterday", "Just now"
-   - **Unread badge** - Red circle with count of new messages
-4. Click any chat to open it
-5. The MessagesPanel closes and the chat screen loads with full message history
+**View Your Chats:**
+- All active chats appear in the Messages Panel
+- Each chat shows participant names and last message
+- Timestamps indicate last activity
+- Real user avatars (Reddit snoovatars) for visual identification
 
-#### 5. Reading Messages
+**Search Chats:**
+- Use the search bar at the top of Messages Panel
+- Find chats by participant name or message content
+- Results update as you type
 
-- All messages in the selected chat load automatically (most recent 50 messages initially)
-- Each message displays in a white card with rounded corners and subtle shadow:
-  - **Username** in Reddit orange (#d93900) - the person who sent it
-  - **Timestamp** in gray - shows the time the message was sent (e.g., "2:45 PM")
-  - **Edited indicator** - Shows "(edited)" if the message was modified
-  - **Three-dot menu** - Appears on hover for your own messages (edit/delete options)
-  - **Message text** in dark gray - the actual message content
-- The chat automatically scrolls to show the newest messages at the bottom
-- **Load More Button** - If older messages exist, a "Load More" button appears at the top of the message list
-  - Click to fetch the next 50 older messages
-  - Shows a loading spinner while fetching
-  - Automatically maintains your scroll position after loading
-- **Scroll-to-Load** - Alternatively, scroll near the top (within 100px) to automatically load more messages
-- If no messages exist yet, you'll see "No messages yet. Start the conversation!"
-- If no chat is selected, you'll see "Select a chat to start messaging"
+**Delete a Chat:**
+- Open the chat you want to delete
+- Access chat settings (three-dot menu)
+- Select "Delete Chat"
+- Confirm deletion (this removes all messages permanently)
 
-#### 6. Sending Messages
+#### 4. Advanced Features
 
-**Two Methods to Send:**
+**Message Pagination:**
+- Chats load 50 most recent messages initially
+- Scroll to top to trigger automatic loading of older messages
+- Or click the "Load More" button that appears at the top
+- Scroll position is preserved when loading older messages
 
-**Keyboard Shortcut (Recommended):**
-1. Ensure a chat is selected (if not, you'll see "Select a chat first..." placeholder)
-2. Click in the text input field at the bottom
-3. Type your message (any length, multiline supported)
-4. Press **Enter** to send instantly
-5. Message appears immediately and broadcasts to all participants in realtime
+**Connection Management:**
+- Green dot indicator shows you're connected
+- Gray dot indicates disconnected state
+- Yellow banner appears when offline
+- Automatic reconnection when connection is restored
+- Actions are disabled when offline to prevent errors
 
-**Send Button:**
-1. Type your message in the input field
-2. Click the **send button** (📤 paper plane icon) on the right
-3. Message is sent and appears instantly
+**Toast Notifications:**
+- Success messages (green) for completed actions
+- Error messages (red) for failed operations
+- Info messages (blue) for general notifications
+- Retry buttons appear for failed operations
+- Auto-dismiss after 5 seconds or manual close
 
-**Important Notes:**
-- **Chat must be selected first** - The input is disabled until you select a chat from MessagesPanel
-- **Optimistic updates** - Your message appears immediately without waiting for server confirmation
-- **Realtime broadcasting** - All participants see your message instantly via Devvit's realtime channel
-- **Loading indicator** - Brief "..." animation shows while the message is being saved to Redis
-- **Disabled state** - Send button is grayed out when input is empty or no chat is selected
-- **Chat isolation** - Messages are only sent to the currently active chat, not all chats
+#### 5. Tips and Best Practices
 
-#### 7. Editing and Deleting Messages
+**For Best Experience:**
+- Keep the app open to receive real-time messages
+- Use keyboard shortcuts (Enter to send, Escape to close panels)
+- Check connection status before sending important messages
+- Edit messages within a few minutes for best results
+- Use the search feature to find old conversations quickly
 
-**To Edit Your Message:**
-1. **Hover** over any message you sent (identified by your username)
-2. Click the **three-dot menu** (⋮) that appears on the right side
-3. Select **"Edit"** from the dropdown menu
-4. An **inline text editor** appears with your current message content
-5. Modify the text as needed (supports multiline editing)
-6. Click **"Save"** to update or **"Cancel"** to discard changes
-7. Edited messages display an **"(edited)"** indicator next to the timestamp
-8. The message updates instantly for all participants via realtime sync
+**Privacy and Security:**
+- Only you and chat participants can see messages
+- Messages are stored securely in Redis
+- Automatic deletion after 90 days protects privacy
+- You can delete your messages at any time
+- Consent is required before using the app
 
-**To Delete Your Message:**
-1. **Hover** over your message
-2. Click the **three-dot menu** (⋮)
-3. Select **"Delete"** (displayed in red) from the dropdown
-4. A **confirmation modal** appears: "Are you sure you want to delete this message? This action cannot be undone."
-5. Click **"Delete"** to permanently remove or **"Cancel"** to keep it
-6. Deleted messages are removed from Redis and disappear for all users immediately
-
-**Authorization & Security:**
-- **Own messages only** - You can only edit/delete messages where your username matches the author
-- **No menu for others** - The three-dot menu doesn't appear on messages from other users
-- **Server-side validation** - The server verifies you're the message author before allowing modifications
-- **Permanent deletion** - Deleted messages cannot be recovered (no undo functionality)
-- **Edit tracking** - Edited messages retain their original timestamp but add an `editedAt` timestamp
-
-#### 8. Real-Time Updates & Connection Status
-
-**How Real-Time Works:**
-- **Instant message delivery** - When anyone sends a message to your current chat, it appears immediately without page refresh
-- **Chat-specific filtering** - Messages include a `chatId` field; the client only displays messages matching your active chat
-- **Optimistic updates** - Your own messages appear instantly, then sync via realtime for confirmation
-- **Duplicate prevention** - The app compares message IDs to prevent the same message from appearing twice
-- **Multi-chat isolation** - Messages from other chats don't leak into your current conversation
-- **Persistent history** - All messages are saved to Redis with chat-specific keys (`chat:{chatId}:messages`)
-
-**Connection Status Indicators:**
-- Open the **SidePanel** (hamburger menu icon) to view your connection status
-- **Green dot (●)** = Connected and receiving live updates via Devvit's realtime channel
-- **Gray dot (●)** = Disconnected (may need to refresh the page to reconnect)
-- The app automatically attempts to reconnect if the connection drops
-- Connection state is tracked in real-time using `onConnect` and `onDisconnect` callbacks
-
-**What Happens When You're Offline:**
-- Messages you send are queued and will be sent when connection is restored
-- You can still read your message history (loaded from Redis on page load)
-- New messages from others won't appear until you reconnect
-- Refresh the page to force a reconnection if needed
-
-#### 9. Navigation & Panels
-
-**LeftPanel (Navigation Menu):**
-- Click the back arrow button in the top-left corner to open
-- The panel slides in from the left with a dark backdrop overlay
-- **Navigation Options** include:
-  - Home (house icon) - Navigate to the Home screen with feed placeholder
-  - Messages (chat bubble icon) - Opens the MessagesPanel to browse chat sessions
-  - Explore (magnifying glass with plus icon) - Navigate to the Explore screen for discovering communities
-  - Search (magnifying glass icon) - Navigate to the Search screen for finding posts and users
-  - Places (map pin icon) - Navigate to the Places screen for location-based communities
-- **Additional Options** (below divider):
-  - Saved (bookmark icon) - Navigate to the Saved screen for bookmarked content
-  - History (clock icon) - Navigate to the History screen for recently viewed posts
-  - Settings (gear icon) - Opens the SettingsPanel for app configuration
-- Click the right arrow button or tap the backdrop to close the panel
-- When you click "Messages", the LeftPanel closes and the MessagesPanel opens with a smooth 300ms transition
-- When you click a screen option (Home, Explore, Search, Places, Saved, History), the panel closes and navigates to that screen
-
-**MessagesPanel (Chat Sessions):**
-- Opens from the LeftPanel by clicking "Messages"
-- The panel slides in from the left (480px wide on desktop, full-width on mobile)
-- **Search Bar** at the top to filter chat sessions (placeholder for future functionality)
-- **Chat Session List** displays:
-  - Chat avatar (💬 emoji)
-  - Chat title (or truncated chat ID if no title)
-  - Last message preview with username
-  - Relative timestamp (e.g., "5m", "2h", "Yesterday", "Just now")
-  - Unread message count badge (red circle with number)
-- **New Message Button** at the bottom to create a new chat
-- **Loading State** - Shows spinner while fetching chats
-- **Empty State** - Shows "No messages yet" with icon when no chats exist
-- Click any chat session to select it and view its messages (closes the panel and loads that chat)
-- Click the X button or tap the backdrop to close and return to the LeftPanel
-- When closing, the MessagesPanel closes first, then the LeftPanel reopens with a 300ms delay
-
-**NotificationPanel:**
-- Access notifications through the bell icon in the top-right corner
-- The panel slides in from the right with a dark backdrop overlay
-- **Notification Types**:
-  - **Messages** (blue) - Direct messages from other users with a chat bubble icon
-  - **Mentions** (purple) - When someone mentions you in a chat with an @ icon
-  - **System** (gray) - System updates and announcements with an info icon
-- **Features**:
-  - Unread notifications show a blue dot indicator on the right
-  - Timestamps show relative time (e.g., "Just now", "5m ago", "2h ago")
-  - Unread notifications have a light blue background
-  - "Mark all as read" button at the bottom
-  - Empty state with bell icon when no notifications exist
-- Click the X button or tap the backdrop to close the panel
-- **Note**: Currently displays mock data for demonstration purposes
-
-**SettingsPanel:**
-- Access settings through the LeftPanel by clicking "Settings"
-- The panel slides in from the left with a dark backdrop overlay
-- Configure app preferences, notifications, and privacy settings (placeholder for future functionality)
-- Click the X button or tap the backdrop to close and return to the LeftPanel
-- When closing, the SettingsPanel closes first, then the LeftPanel reopens with a 300ms delay
-
-**Desktop Sidebar:**
-- **Home** - Navigate to the Home screen (default starting screen, highlighted in Reddit orange when active)
-- **Chat** - Access the chat messaging interface
-- **Search** - Navigate to the Search screen for finding content
-- **Places** - Navigate to the Places screen for location-based communities
-- **Collapse button** (chevron icon) - Save screen space by collapsing the sidebar to icon-only view (64px vs 256px)
-
-**Mobile Bottom Navigation:**
-- **Home** - Navigate to the Home screen (default starting screen, highlighted in Reddit orange when active)
-- **Chat** - Access the chat messaging interface
-- **Search** - Navigate to the Search screen for finding content
-- **Places** - Navigate to the Places screen for location-based communities
-
-**Additional Controls:**
-- **Plus button** (+) next to the send button - Reserved for future features like attachments, emojis, or file uploads
-
-#### 10. Best Practices & Tips
-
-**Navigation:**
-- **Explore all screens** - Use the sidebar or bottom navigation to discover Home, Explore, Search, Places, Saved, and History screens
-- **Quick access** - The back arrow in the top-left opens the LeftPanel for fast navigation between screens
-- **Desktop users** - Collapse the sidebar (chevron button) when you need more screen space
-- **Mobile users** - Bottom navigation bar is fixed (64px height) for easy access to all sections
-
-**Chat Management:**
-- **Create chats strategically** - Use the "New Message" button to start new conversations for different topics or groups
-- **Always select a chat first** - The input field is disabled until you select a chat from MessagesPanel
-- **Switch chats frequently** - Use MessagesPanel to browse and jump between conversations quickly
-- **Monitor unread counts** - Red badges on chat sessions show how many new messages you haven't read
-- **Load older messages** - Use the "Load More" button or scroll to the top to fetch message history beyond the initial 50 messages
-
-**Message Etiquette:**
-- **Edit carefully** - Edited messages display an "(edited)" indicator, so others know the content changed
-- **Delete with caution** - Deletion is permanent and cannot be undone - use the confirmation dialog wisely
-- **Be respectful** - You're chatting with real Reddit users; follow community guidelines
-- **Stay on topic** - Each chat typically focuses on a specific subject or community discussion
-
-**Technical Tips:**
-- **Check connection status** - Open SidePanel to see if you're connected (green dot = live, gray = disconnected)
-- **Watch for toast notifications** - Error messages appear in the top-right corner with helpful retry actions
-- **Use retry actions** - When operations fail, click the "Retry" button in the toast to try again
-- **Monitor offline status** - Yellow banner appears at the top when you lose internet connection
-- **Refresh if issues occur** - If messages aren't appearing, refresh the page to reconnect to the realtime channel
-- **Message persistence** - All messages are saved to Redis, so your history persists even after closing the app
-- **Chat isolation** - Messages are strictly isolated per chat - no cross-contamination between conversations
-
-**UI Navigation:**
-- **Panel coordination** - Panels transition smoothly (300ms delays) to prevent overlap and create polished UX
-- **Browse efficiently** - MessagesPanel shows preview messages, timestamps, and unread counts for quick scanning
-- **Dismiss toasts** - Click the X button on any toast notification to close it immediately
-- **Screen switching** - Navigate between screens using the sidebar, bottom nav, or LeftPanel menu
+**Performance Tips:**
+- Messages are paginated for fast loading
+- Avatars are cached for quick display
+- Optimistic updates make the app feel instant
+- Offline mode prevents wasted API calls
+- Automatic cleanup keeps storage efficient
 
 ---
 
@@ -440,6 +440,8 @@ src/
 │   ├── terms.html             # HTML template for terms screen (inline mode)
 │   ├── index.css              # Global styles and Tailwind imports
 │   ├── components/            # Reusable UI components
+│   │   ├── Avatar.tsx         # Base avatar component for displaying user snoovatars with fallback support
+│   │   ├── ProfileIcon.tsx    # Specialized avatar component for chat messages and user profiles
 │   │   ├── PolicyOverlay.tsx  # Reusable overlay for Privacy Policy and Terms & Conditions
 │   │   ├── Sidebar.tsx        # Desktop collapsible navigation sidebar (Chat, Search, Home, Places)
 │   │   ├── MobileNav.tsx      # Mobile bottom navigation bar (Home, Chat, Search, Places)
@@ -456,10 +458,29 @@ src/
 │   │   └── useCounter.ts      # Legacy counter hook (from template)
 │   ├── lib/                   # Utility functions
 │   │   └── utils.ts           # Helper functions (e.g., cn for classnames)
+│   ├── utils/                 # Client utility functions
+│   │   └── avatarFallback.ts  # Avatar fallback utilities (FALLBACK_AVATAR_SVG, getDefaultAvatarUrl)
+│   ├── components/Snoovatar/  # Advanced snoovatar system (currently in use)
+│   │   ├── Snoovatar.tsx      # Enhanced avatar component with accessories and animations
+│   │   ├── SnoovatarSprite.tsx # Sprite-based snoovatar rendering component
+│   │   ├── defaultSnoovatars.ts # Default avatar color schemes and fallback generation
+│   │   ├── accessories.ts     # Accessory definitions and configurations
+│   │   ├── animations.css     # CSS animations for snoovatar movements
+│   │   ├── types.ts           # Snoovatar type definitions
+│   │   ├── useSnoovatar.ts    # Snoovatar state management hook
+│   │   ├── index.ts           # Public exports for Snoovatar system
+│   │   ├── examples/          # Example implementations
+│   │   │   ├── DefaultAvatarsExample.tsx # Default avatar showcase
+│   │   │   └── GameAvatarExample.tsx # Game integration example
+│   │   ├── README.md          # Snoovatar system documentation
+│   │   ├── ARCHITECTURE.md    # System architecture guide
+│   │   ├── IMPLEMENTATION_GUIDE.md # Implementation instructions
+│   │   ├── MIGRATION_GUIDE.md # Migration from Avatar to Snoovatar
+│   │   └── DEFAULT_AVATARS_GUIDE.md # Default avatar system guide
 │   ├── screens/               # Screen components for different views
 │   │   ├── WelcomeScreen.tsx  # Onboarding welcome screen with feature highlights
 │   │   ├── TermsScreen.tsx    # Terms acceptance screen with Privacy Policy and T&C
-│   │   ├── HomeScreen.tsx     # Home feed placeholder screen
+│   │   ├── HomeScreen.tsx     # Avatar testing slideshow with 12 comprehensive test slides
 │   │   ├── ExploreScreen.tsx  # Explore/discovery placeholder screen
 │   │   ├── SearchScreen.tsx   # Search placeholder screen
 │   │   ├── PlacesScreen.tsx   # Places/location placeholder screen
@@ -493,6 +514,9 @@ src/
 ### Implementation Details
 
 **Client Features**:
+- **Home Screen** - Displays personalized welcome with user's avatar, username, and beautiful gradient background
+- **Avatar System** - Uses base `Avatar` component for displaying Reddit snoovatars with smart fallback to default snoo icon, loading states with animated skeleton, and error handling
+- **Chat Interface** - Full-featured messaging UI with message cards, avatars, timestamps, edit indicators, and action menust identity.
 - Multiple HTML entry points for onboarding flow:
   - `welcome.html` - Welcome screen in inline mode (height: regular)
   - `terms.html` - Terms acceptance screen in inline mode (height: regular)
@@ -502,6 +526,21 @@ src/
   - TermsScreen displays Privacy Policy and Terms & Conditions with clickable overlays
   - PolicyOverlay component for displaying full policy documents with scroll and keyboard support
   - Consent acceptance triggers transition to expanded mode using `requestExpandedMode`
+- Avatar Testing Slideshow (Home screen):
+  - Fetches 12 test slides from `/api/avatar-test` endpoint on mount
+  - Each slide contains: title, description, avatar URL, and source type
+  - Displays large avatar (192px) in rounded container with border
+  - Shows slide counter (e.g., "1 / 12") in top-right corner
+  - Displays username in top-left corner
+  - Source badge indicates avatar type (custom, default, fallback)
+  - Full URL displayed in code block for debugging
+  - Navigation buttons ("← Previous", "Next →") for manual control
+  - Keyboard navigation with arrow keys (←/→ or ↑/↓)
+  - Slides loop continuously (after last slide, returns to first)
+  - Loading state with "Loading avatar tests..." message
+  - Error handling with "No avatar data available" fallback
+  - Beautiful gradient background (blue-to-green) creates welcoming atmosphere
+  - Image error handling with fallback to `/default-snoo.png` and opacity reduction
 - Real-time message broadcasting using `connectRealtime` from `@devvit/web/client`
 - Multi-chat state management with `currentChatId` tracking
 - Message edit and delete functionality with authorization checks
@@ -533,11 +572,34 @@ src/
   - Mobile: Bottom navigation bar (64px height) with fixed positioning
   - Both: Multiple slide-out panels that overlay content with coordinated transitions
 - Component architecture with reusable UI components:
+  - `Avatar.tsx` - Base avatar component that mimics Devvit Blocks `<avatar>` for web:
+    - Displays user snoovatars with configurable sizes (xxsmall to xxxlarge)
+    - Supports left/right facing directions
+    - Implements loading states with animated skeleton
+    - Automatic fallback to `FALLBACK_AVATAR_SVG` on image load errors
+    - Rounded images with orange border (border-2 border-orange-500)
+    - Optional click handlers for interactive avatars
+    - Lazy loading for performance optimization
+  - `ProfileIcon.tsx` - Specialized avatar component for chat messages and user profiles:
+    - Optimized sizes for chat contexts (xsmall, small, medium, large, xlarge)
+    - Consistent fallback pattern matching HomeScreen implementation
+    - Gray border (border-2 border-gray-200) for subtle appearance
+    - Automatic error handling with opacity reduction on fallback
+    - Designed for MessagesPanel and chat message displays
+    - Lazy loading for performance in message lists
+  - `Snoovatar.tsx` - Advanced avatar component with enhanced features:
+    - Built on top of base Avatar component
+    - Supports accessories, animations, and custom color schemes
+    - Integrates with `useSnoovatar` hook for state management
+    - Multiple size options (tiny, small, medium, large, xlarge)
+    - Smart fallback system with default snoovatars
+    - Loading states and error handling
+    - Animated entrance effects
   - `Sidebar.tsx` - Desktop collapsible navigation with Chat, Search, Home, Places
   - `MobileNav.tsx` - Mobile bottom navigation with Home, Chat, Search, Places
   - `TopNav.tsx` - Top header with back button and notification bell
   - `LeftPanel.tsx` - Navigation menu with Home, Messages, Explore, Search, Places, Saved, History, Settings
-  - `MessagesPanel.tsx` - Chat session browser with chat list, search bar, and "New Message" button
+  - `MessagesPanel.tsx` - Chat session browser with real user avatars (Reddit snoovatars with gradient fallback), chat list, search bar, and "New Message" button
   - `NotificationPanel.tsx` - Notification management with categorized alerts (messages, mentions, system)
   - `SettingsPanel.tsx` - App settings and preferences configuration
   - `SidePanel.tsx` - User info panel with username, connection status, and menu options
@@ -567,6 +629,7 @@ src/
 
 **Server Endpoints**:
 - `GET /api/username` - Returns the current Reddit user's username
+- `GET /api/user/avatar` - Returns the user's avatar URL (snoovatar or default) and username
 - `GET /api/consent/check` - Checks if the user has accepted terms (returns hasConsent boolean and consent object)
 - `POST /api/consent/accept` - Records user's acceptance of terms with timestamp and version
 - `POST /api/chats/create` - Creates a new chat and returns the chat ID
@@ -603,41 +666,49 @@ src/
 9. All connected clients receive message via `onMessage` callback
 10. Clients filter by `chatId` and only add message if it matches their current chat (if not already present)
 
-### Key Design Decisions
-
-**Why Collapsible Sidebar on Desktop?**
-- Provides quick navigation without taking up too much horizontal space
-- Users can collapse to icon-only view for maximum chat area
-- Smooth transitions create a polished user experience
-
-**Why Bottom Navigation on Mobile?**
-- Follows mobile-first design principles
-- Doesn't steal horizontal space (critical on narrow screens)
-- Thumb-friendly positioning for one-handed use
-- Common pattern in mobile apps (Instagram, Twitter, etc.)
-
-**Why Multiple Coordinated Panels?**
-- Provides rich navigation without cluttering the main chat interface
-- LeftPanel offers primary navigation (Home, Messages, Explore, etc.)
-- MessagesPanel shows detailed chat session browser with subreddit conversations
-- NotificationPanel manages alerts and notifications separately
-- Coordinated transitions (300ms delays) prevent panels from overlapping
-- Smooth animations create a polished, app-like experience
-
-**Why Optimistic Updates?**
-- Creates a snappy, responsive feel
-- Users see their messages instantly without waiting for server confirmation
-- Reduces perceived latency and improves user experience
-
-**Why Redis for Storage?**
-- Fast in-memory data store perfect for chat messages
-- Built-in support in Devvit platform
-- Simple key-value structure for post-specific message storage
-- Persistent across server restarts
-
 ---
 
 ### Cursor Integration
 
 This template comes with a pre-configured Cursor environment. To get started, [download Cursor](https://www.cursor.com/downloads) and enable the `devvit-mcp` when prompted.
-# AroundHere-Devvit
+
+---
+
+## 📝 Summary
+
+**Happening is a real-time chat platform for Reddit**, built on the Devvit platform to bring modern messaging functionality directly into Reddit communities.
+
+**What it does:**
+- Provides real-time messaging with instant delivery
+- Manages multiple chat conversations with persistent history
+- Allows full message control (edit, delete, pagination)
+- Displays user avatars with smart fallback system
+- Adapts seamlessly between desktop and mobile devices
+- Handles offline/online states gracefully with visual feedback
+
+**Key Features:**
+- ✅ Real-time message broadcasting using Devvit's realtime API
+- ✅ Multiple chat support with participant management
+- ✅ Message editing and deletion with authorization checks
+- ✅ Persistent message history with automatic pagination (50 messages per page)
+- ✅ Smart avatar system with Reddit snoovatars and fallbacks
+- ✅ Responsive design (desktop sidebar, mobile bottom nav)
+- ✅ Toast notifications for all actions
+- ✅ Automatic data retention (90-day messages, 180-day chats)
+- ✅ Onboarding flow with consent tracking
+
+**Perfect for:**
+- 💬 Reddit communities wanting real-time chat
+- 🤝 Direct messaging between Reddit users
+- 📢 Live event coordination and discussion
+- 🎮 Gaming communities for team coordination
+- 📚 Study groups for collaborative learning
+
+**How to use it:**
+1. Launch the app in a Reddit post (complete onboarding first time)
+2. View your personalized home screen with avatar and welcome message
+3. Browse your chats or create a new one
+4. Send messages instantly with real-time delivery
+5. Edit or delete messages as needed
+6. Load older messages by scrolling up
+7. Enjoy a modern messaging experience built into Reddit
